@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: #111;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: #FFD700;
+      transform: translateY(-2px);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 50%;
+      background: #FFD700;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .btn-yellow {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: black;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-yellow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Contact Hero Section */
+    .contact-hero {
+      background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(255,215,0,0.3)), 
+                  url('https://images.unsplash.com/photo-1516321497487-e288fb19713f') no-repeat center center/cover;
+      height: 50vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    .contact-hero-content h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      animation: fadeInUp 1s ease-out;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .contact-hero-content p {
+      font-size: 1.2rem;
+      animation: fadeInUp 1s ease-out 0.3s both;
+      opacity: 0.9;
+      max-width: 600px;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Main Contact Section */
+    .contact-main {
+      padding: 100px 50px;
+      background: #f8f9fa;
+    }
+
+    .contact-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* Contact Form */
+    .contact-form {
+      background: white;
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-form::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #FFD700, #FFA500);
+    }
+
+    .contact-form h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .contact-form-subtitle {
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #FFD700;
+      background: white;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .submit-btn {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: black;
+      padding: 18px 40px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Contact Info */
+    .contact-info {
+      padding: 20px 0;
+    }
+
+    .contact-info h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .contact-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border-left: 5px solid #FFD700;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .contact-card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .contact-icon {
+      font-size: 1.8rem;
+      color: #FFD700;
+      margin-right: 15px;
+      width: 50px;
+      text-align: center;
+    }
+
+    .contact-card h3 {
+      font-size: 1.3rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .contact-card p {
+      color: #666;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .contact-card a {
+      color: #333;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .contact-card a:hover {
+      color: #FFD700;
+    }
+
+    /* Business Hours */
+    .business-hours {
+      background: linear-gradient(135deg, #333, #111);
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      margin-top: 40px;
+    }
+
+    .business-hours h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #FFD700;
+      text-align: center;
+    }
+
+    .hours-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #444;
+    }
+
+    .hours-row:last-child {
+      border-bottom: none;
+    }
+
+    .hours-day {
+      font-weight: 500;
+    }
+
+    .hours-time {
+      color: #ccc;
+    }
+
+    /* Map Section */
+    .map-section {
+      padding: 80px 50px;
+      background: white;
+    }
+
+    .map-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .map-container h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .map-container p {
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .map-placeholder {
+      background: #f0f0f0;
+      height: 400px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 1.2rem;
+      border: 2px dashed #ddd;
+    }
+
+    /* Footer Styles */
+    footer {
+      background: #4e4e4e;
+      color: white;
+      padding: 60px 50px 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+    }
+
+    footer h4 {
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    footer hr {
+      width: 50px;
+      border: 2px solid #FFD700;
+      margin-bottom: 20px;
+    }
+
+    footer ul {
+      list-style: none;
+    }
+
+    footer ul li {
+      margin-bottom: 12px;
+    }
+
+    footer ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    footer ul li a:hover {
+      color: #FFD700;
+      padding-left: 5px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .socials i {
+      font-size: 1.5rem;
+      background: #666;
+      color: white;
+      padding: 12px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .socials i:hover {
+      transform: translateY(-3px);
+      background-color: #FFD700;
+      color: #111;
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      .contact-hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .contact-main {
+        padding: 60px 20px;
+      }
+
+      .contact-container {
+        grid-template-columns: 1fr;
+        gap: 50px;
+      }
+
+      .contact-form {
+        padding: 30px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .map-section {
+        padding: 60px 20px;
+      }
+
+      footer {
+        padding: 40px 20px 20px;
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-hero-content h1 {
+        font-size: 2rem;
+      }
+
+      .contact-form {
+        padding: 20px;
+      }
+
+      .contact-form h2,
+      .contact-info h2 {
+        font-size: 2rem;
+      }
+    }
+    .footer-col .social-links a{
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+	background-color: rgba(255,255,255,0.2);
+	margin:0 10px 10px 0;
+	text-align: center;
+	line-height: 40px;
+	border-radius: 50%;
+	color: #ffffff;
+	transition: all 0.5s ease;
+}
+.footer-col .social-links a:hover{
+	color: #24262b;
+	background-color: #ffffff;
+}
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Evenraw</div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#contact">Contact Us</a>
+      <a href="#quote" class="btn-yellow">Get a Quote</a>
+      <a href="#" class="btn-yellow">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
+  </header>
+
+  <!-- Contact Hero Section -->
+  <section class="contact-hero">
+    <div class="contact-hero-content">
+      <h1>Get In Touch</h1>
+      <p>Ready to capture your special moments? We'd love to hear from you and discuss how we can bring your vision to life.</p>
+    </div>
+  </section>
+
+  <!-- Main Contact Section -->
+  <section class="contact-main">
+    <div class="contact-container">
+      <!-- Contact Form -->
+      <div class="contact-form">
+        <h2>Send Us a Message</h2>
+        <p class="contact-form-subtitle">Fill out the form below and we'll get back to you within 24 hours.</p>
+        
+        <form>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="service">Service Interested In *</label>
+            <select id="service" name="service" required>
+              <option value="">Select a service</option>
+              <option value="wedding">Wedding Photography</option>
+              <option value="event">Event Photography</option>
+              <option value="portrait">Portrait Sessions</option>
+              <option value="commercial">Commercial Photography</option>
+              <option value="videography">Videography</option>
+              <option value="graphic-design">Graphic Design</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventDate">Event Date</label>
+              <input type="date" id="eventDate" name="eventDate">
+            </div>
+            
+          </div>
+
+          <div class="form-group">
+            <label for="message">Tell Us About Your Project *</label>
+            <textarea id="message" name="message" placeholder="Describe your event, vision, and any specific requirements..." required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="contact-info">
+        <h2>Contact Information</h2>
+        
+      
+
+        <div class="contact-card">
+          <div class="contact-card-header">
+            <i class="fas fa-phone contact-icon"></i>
+            <h3>Call Us</h3>
+          </div>
+          <p><a href="tel:+1234567890">(+94) 766-7890</a><br>
+             <a href="tel:+1234567891">(+94) 116-7891</a></p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-header">
+            <i class="fas fa-envelope contact-icon"></i>
+            <h3>Email Us</h3>
+          </div>
+          <p><a href="mailto:evenraw@gmail.com">evenraw@gmail.com</a><br>
+             <a href="mailto:bookings@creativelens.com">bookings@creativelens.com</a></p>
+        </div>
+
+        <div class="business-hours">
+          <h3>Business Hours</h3>
+          <div class="hours-grid">
+            <div class="hours-row">
+              <span class="hours-day">Monday - Friday</span>
+              <span class="hours-time">9:00 AM - 6:00 PM</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-day">Saturday</span>
+              <span class="hours-time">10:00 AM - 4:00 PM</span>
+            </div>
+            <div class="hours-row">
+              <span class="hours-day">Sunday</span>
+              <span class="hours-time">By Appointment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <h4>Menu</h4>
+      <hr>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Quote</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get Help</h4>
+      <hr>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Reservations</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Events</h4>
+      <hr>
+      <ul>
+        <li><a href="#">Weddings</a></li>
+        <li><a href="#">Birthdays</a></li>
+        <li><a href="#">Graduations</a></li>
+        <li><a href="#">Corporate Events</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow Us</h4>
+      <hr>
+      <div class="footer-col">
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+            </div>
+    </div>
+  </footer>
+</body>
+
+</html>
