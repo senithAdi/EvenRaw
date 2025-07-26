@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Profile</title>
+  <link rel="stylesheet" href="Home_CSS.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -226,64 +227,6 @@
       color: #e74c3c !important;
     }
 
-    /* Footer Styles */
-    footer {
-      background: #4e4e4e;
-      color: white;
-      padding: 40px 30px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
-    }
-
-    footer h4 {
-      margin-bottom: 10px;
-    }
-
-    footer hr {
-      width: 30px;
-      border: 2px solid #FFD700;
-      margin-bottom: 15px;
-    }
-
-    footer ul {
-      list-style: none;
-    }
-
-    footer ul li {
-      margin-bottom: 10px;
-    }
-
-    footer ul li a {
-      color: #ccc;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    footer ul li a:hover {
-      color: #FFD700;
-    }
-
-    .socials {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .socials i {
-      font-size: 1.5rem;
-      background: #ddd;
-      color: #111;
-      padding: 10px;
-      border-radius: 50%;
-      transition: transform 0.3s;
-    }
-
-    .socials i:hover {
-      transform: scale(1.2);
-      background-color: #FFD700;
-      color: #111;
-    }
 
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -329,18 +272,6 @@
         font-size: 0.9rem;
       }
       
-    }
-     .footer-col .social-links a{
-	display: inline-block;
-	height: 40px;
-	width: 40px;
-	background-color: rgba(255,255,255,0.2);
-	margin:0 10px 10px 0;
-	text-align: center;
-	line-height: 40px;
-	border-radius: 50%;
-	color: #ffffff;
-	transition: all 0.5s ease;
     }
   </style>
 </head>
@@ -421,8 +352,7 @@
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer>
+ <footer>
     <div>
       <h4>Menu</h4>
       <hr>
@@ -440,6 +370,8 @@
       <ul>
         <li><a href="#">FAQ</a></li>
         <li><a href="#">Reservations</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Terms of Service</a></li>
       </ul>
     </div>
     <div>
@@ -449,19 +381,24 @@
         <li><a href="#">Weddings</a></li>
         <li><a href="#">Birthdays</a></li>
         <li><a href="#">Graduations</a></li>
+        <li><a href="#">Corporate Events</a></li>
       </ul>
     </div>
     <div>
       <h4>Follow Us</h4>
       <hr>
-       <div class="footer-col">
+      <div class="footer-col">
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-whatsapp"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
+            </div>
     </div>
+    <div class="copyright">
+  <p>© 2025 EvenRaw Photography. All rights reserved. | Professional Photography Services</p>
+</div>
   </footer>
 </body>
 
