@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ</title>
+   <link rel="stylesheet" href="Home_CSS.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header Styles */
+   header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: #111;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    nav a:hover {
+      color: #FFD700;
+      transform: translateY(-2px);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 50%;
+      background: #FFD700;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .btn-yellow {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: black;
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .btn-yellow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      background: linear-gradient(135deg, #FFD700, #FFF59D);
+      min-height: 80vh;
+      padding: 60px 50px;
+      position: relative;
+    }
+
+    .faq-header {
+      margin-bottom: 50px;
+    }
+
+    .faq-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1.2;
+    }
+
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .faq-question {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .faq-answer {
+      font-size: 1.1rem;
+      color: #555;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    /* Footer Styles
+    footer {
+      background: #4e4e4e;
+      color: white;
+      padding: 40px 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    footer h4 {
+      margin-bottom: 10px;
+    }
+
+    footer hr {
+      width: 30px;
+      border: 2px solid #FFD700;
+      margin-bottom: 15px;
+    }
+
+    footer ul {
+      list-style: none;
+    }
+
+    footer ul li {
+      margin-bottom: 10px;
+    }
+
+    footer ul li a {
+      color: #ccc;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    footer ul li a:hover {
+      color: #FFD700;
+    }
+
+    .socials {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .socials i {
+      font-size: 1.5rem;
+      background: #ddd;
+      color: #111;
+      padding: 10px;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .socials i:hover {
+      transform: scale(1.2);
+      background-color: #FFD700;
+      color: #111;
+    } */
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .faq-section {
+        padding: 40px 20px;
+      }
+
+      .faq-title {
+        font-size: 2rem;
+      }
+
+      .faq-item {
+        padding: 30px 20px;
+      }
+
+      .faq-question {
+        font-size: 1.2rem;
+      }
+
+      .faq-answer {
+        font-size: 1rem;
+      }
+      
+    }
+     /* .footer-col .social-links a{
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+	background-color: rgba(255,255,255,0.2);
+	margin:0 10px 10px 0;
+	text-align: center;
+	line-height: 40px;
+	border-radius: 50%;
+	color: #ffffff;
+	transition: all 0.5s ease;
+} */
+
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">Evenraw</div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#contact">Contact Us</a>
+      <a href="#quote" class="btn-yellow">Get a Quote</a>
+      <a href="#" class="btn-yellow">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
+  </header>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="faq-header">
+      <h1 class="faq-title">FAQ<br>SECTION</h1>
+    </div>
+    
+    <div class="faq-container">
+      <div class="faq-item">
+        <h2 class="faq-question">1. What services does Evenraw offer?</h2>
+        <p class="faq-answer">
+          We offer professional photography, videography, and graphic design services. Whether it's a personal shoot, event coverage, business promotion, or social media content — we've got you covered.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h2 class="faq-question">How can I book a session?</h2>
+        <p class="faq-answer">
+          You can book directly through our website using the Booking page. Simply choose your service, date, and fill out your details — we'll take care of the rest.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h2 class="faq-question">What is your pricing structure?</h2>
+        <p class="faq-answer">
+          Our pricing varies based on the type of service, duration, and specific requirements. We offer competitive packages for all budgets. Contact us for a personalized quote based on your needs.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h2 class="faq-question">Do you provide editing and post-production services?</h2>
+        <p class="faq-answer">
+          Yes! All our packages include professional editing and post-production. We enhance your photos and videos to ensure they meet our high-quality standards and your vision.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h2 class="faq-question">How long does it take to receive my final photos/videos?</h2>
+        <p class="faq-answer">
+          Delivery time varies by project size. Typically, edited photos are delivered within 1-2 weeks, and videos within 2-3 weeks. Rush delivery options are available for an additional fee.
+        </p>
+      </div>
+
+      <div class="faq-item">
+        <h2 class="faq-question">What equipment do you use?</h2>
+        <p class="faq-answer">
+          We use professional-grade cameras, lenses, lighting equipment, and audio gear from top brands like Canon, Sony, and Profoto to ensure the highest quality results for every project.
+        </p>
+      </div>
+    </div>
+  </section>
+
+ <footer>
+    <div>
+      <h4>Menu</h4>
+      <hr>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Quote</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Get Help</h4>
+      <hr>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Reservations</a></li>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Events</h4>
+      <hr>
+      <ul>
+        <li><a href="#">Weddings</a></li>
+        <li><a href="#">Birthdays</a></li>
+        <li><a href="#">Graduations</a></li>
+        <li><a href="#">Corporate Events</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Follow Us</h4>
+      <hr>
+      <div class="footer-col">
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+            </div>
+    </div>
+    <div class="copyright">
+  <p>© 2025 EvenRaw Photography. All rights reserved. | Professional Photography Services</p>
+</div>
+  </footer>
+</body>
+
+</html>
