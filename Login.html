@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <div class="logo">EvenRaw</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About Us</a>
+      <a href="Portfolio.html">Portfolio</a>
+      <a href="contact us.html">Contact Us</a>
+      <a href="#" class="btn-yellow">Get a Quote</a>
+      <a href="#" class="btn-yellow">
+        <i class="fas fa-user"></i>
+      </a>
+    </nav>
+  </header>
+
+  <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form action="signup.php" method="POST">
+                <h1>Create Account</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-linkedin'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-github'></i></a>
+                </div>
+                <samp>or use your email for registration</samp>
+                <input type="text" name="name" placeholder="Name">
+                <input type="email" name="email" id="txtEmail" placeholder="Email">
+                <input type="password" name="password" id="txtPassword" placeholder="Password">
+                <button>Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form action="login.php" method="POST">
+                <h1>Sign In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-linkedin'></i></a>
+                    <a href="#" class="icon"><i class='bx bxl-github'></i></a>
+                </div>
+                <samp>or use your email Password</samp>
+                <input type="email" name="email" id="txtEmail" placeholder="Email">
+                <input type="password" name="password" placeholder="Password">
+                <a href="#" class="fp">Forget password?</a>
+                <button>Sign In</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, User!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => {
+            container.classList.add("active");
+        });
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove("active");
+        });
+        
+        //Validations
+                function validateEmail() {
+
+            var email = document.getElementById("txtEmail").value;
+
+            var at = email.indexOf("@");
+            var dt = email.lastIndexOf(".");
+            var len = email.length;
+
+            if ((at < 2) || (dt - at) < 2 || (len - dt) < 2) {
+
+                alert("Please enter a valid email address");
+                return false;
+            }
+            return true;
+        }
+
+            function validatePassword() {
+            let pass = document.getElementById("txtPassword").value;
+
+            if (pass.length < 2) {
+                alert("Please enter correct password.");
+                return false;
+            }
+            return true;
+        }
+        </script>
+
+</body>
+
+</html>

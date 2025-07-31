@@ -1,3 +1,17 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['logged_in'])) {
+    header("Location: index.html");
+    exit();
+}
+
+// // Check if user is admin (either through database or hardcoded check)
+// if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
+//     header("Location: Home.html");
+//     exit();
+// }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
