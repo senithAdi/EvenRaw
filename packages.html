@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Packages</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(120deg, #fff 60%, #f7f7f7 100%);
+    }
+    .gradient-text {
+      background: linear-gradient(to right, #ffea00, #ffef7f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-xl p-6 flex flex-col justify-between">
+    <div>
+      <h1 class="text-2xl font-bold mb-6 text-yellow-400">evenraw.</h1>
+      <ul class="space-y-4">
+        <li><a href="#" class="hover:text-yellow-400">Users</a></li>
+        <li><a href="#" class="hover:text-yellow-400">Bookings</a></li>
+        <li><a href="#" class="hover:text-yellow-400 font-bold">Packages</a></li>
+        <li><a href="#" class="hover:text-yellow-400">Portfolio</a></li>
+        <li><a href="#" class="hover:text-yellow-400">Analytics</a></li>
+        <li><a href="#" class="hover:text-yellow-400">Contact Us</a></li>
+        <li><a href="#" class="hover:text-yellow-400">Feedback</a></li>
+      </ul>
+    </div>
+    <div class="text-sm text-gray-500">
+      <p>&copy; 2025 Evenraw</p>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold gradient-text">Packages</h2>
+      <div class="flex items-center space-x-4">
+        <span class="text-gray-700 font-medium">John Cena</span>
+        <img src="https://via.placeholder.com/40" class="rounded-full border" alt="User">
+      </div>
+    </div>
+
+    <!-- Package Categories -->
+    <div class="space-y-10 animate-fadeIn">
+      <!-- Reusable Card Component -->
+      <div>
+        <h3 class="text-xl font-semibold mb-4">Food Photography</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Bronze Package</h4>
+            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Silver Package</h4>
+            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Gold Package</h4>
+            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Repeat similar structure for Wedding, Model, Commercial, etc. -->
+      <div>
+        <h3 class="text-xl font-semibold mb-4">Wedding Photography</h3>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Bronze Package</h4>
+            <button onclick="openEditModal('Wedding Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Silver Package</h4>
+            <button onclick="openEditModal('Wedding Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
+            <h4 class="text-lg font-bold">Gold Package</h4>
+            <button onclick="openEditModal('Wedding Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add more sections for other categories similarly -->
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+  <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white p-8 rounded-xl w-96 shadow-xl">
+      <h3 id="editTitle" class="text-xl font-semibold mb-4">Edit Package</h3>
+      <input type="text" class="w-full p-3 border rounded mb-4" placeholder="Package Name">
+      <textarea class="w-full p-3 border rounded mb-4" placeholder="Package Details"></textarea>
+      <div class="flex justify-end space-x-3">
+        <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+        <button class="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openEditModal(title) {
+      document.getElementById('editTitle').textContent = "Edit " + title;
+      document.getElementById('editModal').classList.remove('hidden');
+    }
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

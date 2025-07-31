@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evenraw Admin - Contact List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-white shadow-lg h-screen fixed">
+    <div class="p-4 text-2xl font-bold text-yellow-500">evenraw</div>
+    <nav class="mt-6">
+      <ul class="space-y-3 text-gray-700">
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Users</li>
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Bookings</li>
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Portfolio</li>
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Packages</li>
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Analysis</li>
+        <li class="px-6 py-2 bg-yellow-100 font-semibold cursor-pointer">Contact List</li>
+        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Feedbacks</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-64 w-full p-6">
+    <header class="flex justify-between items-center mb-8">
+      <h1 class="text-2xl font-semibold">Contact List</h1>
+      <div class="flex items-center gap-4">
+        <i class='bx bx-bell text-2xl'></i>
+        <div class="flex items-center space-x-2">
+          <img src="https://i.pravatar.cc/40" class="rounded-full" alt="User">
+          <span>John Cena</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contact Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Contact Card -->
+      <div class="card bg-white rounded-2xl p-6 shadow hover:shadow-lg">
+        <div class="flex items-center space-x-4">
+          <img src="https://i.pravatar.cc/60" class="w-14 h-14 rounded-full" alt="">
+          <div>
+            <h2 class="text-lg font-semibold">John Cena</h2>
+            <p class="text-gray-500">Senior Photographer</p>
+            <p class="text-gray-600 text-sm mt-2">+94 12 34 56 789</p>
+            <p class="text-gray-600 text-sm">johncena123@gmail.com</p>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat cards -->
+      <div class="card bg-white rounded-2xl p-6 shadow hover:shadow-lg">
+        <div class="flex items-center space-x-4">
+          <img src="https://i.pravatar.cc/60" class="w-14 h-14 rounded-full" alt="">
+          <div>
+            <h2 class="text-lg font-semibold">John Cena</h2>
+            <p class="text-gray-500">Senior Photographer</p>
+            <p class="text-gray-600 text-sm mt-2">+94 12 34 56 789</p>
+            <p class="text-gray-600 text-sm">johncena123@gmail.com</p>
+          </div>
+        </div>
+      </div>
+      <!-- Add More Button -->
+      <div id="addContactBtn" class="cursor-pointer flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 hover:bg-yellow-50 transition">
+        <i class='bx bx-plus text-4xl text-gray-500'></i>
+      </div>
+    </div>
+  </main>
+
+  <!-- Add Contact Modal -->
+  <div id="contactModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 w-96 shadow-lg">
+      <h2 class="text-xl font-semibold mb-4">Add New Contact</h2>
+      <form id="contactForm" class="space-y-4">
+        <input type="text" placeholder="Name" class="w-full p-2 border rounded" required>
+        <input type="text" placeholder="Role" class="w-full p-2 border rounded" required>
+        <input type="tel" placeholder="Phone" class="w-full p-2 border rounded" required>
+        <input type="email" placeholder="Email" class="w-full p-2 border rounded" required>
+        <div class="flex justify-end gap-3 mt-4">
+          <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('contactModal');
+    const addBtn = document.getElementById('addContactBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    addBtn.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Contact Added Successfully!');
+      modal.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
