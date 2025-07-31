@@ -3,186 +3,253 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Packages</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Packages - EvenRaw</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
   <style>
-    body {
-      background: linear-gradient(120deg, #fff 60%, #f7f7f7 100%);
-    }
-    .gradient-text {
-      background: linear-gradient(to right, #ffea00, #ffef7f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    /* Reuse Sidebar & Footer styles from your code */
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+.container { display: flex; flex: 1; }
+
+/* Sidebar (from your code) */
+.sidebar { width: 220px; background: linear-gradient(180deg, #fff700, #ffe600); padding: 30px 20px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
+.logo { font-size: 1.8em; font-weight: 700; letter-spacing: 2px; }
+.sidebar a { text-decoration: none; color: #111; font-weight: 500; padding: 12px 10px; border-radius: 8px; transition: background 0.3s; }
+.sidebar a:hover, .sidebar a.active { background: rgba(0, 0, 0, 0.1); }
+
+/* Main Content */
+.main-content { margin-left: 220px; padding: 40px; flex: 1; animation: fadeIn 0.5s ease; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+header h1 { font-size: 28px; color: #333; }
+.user-info { font-weight: 500; color: #555; }
+
+/* Packages */
+.packages h2 { font-size: 24px; margin-bottom: 20px; }
+.package-category { margin-bottom: 25px; }
+.package-category h3 { background: #FFD700; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 20px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+.package-category h3:hover { background: #e6c800; }
+.package-list { display: none; margin-top: 10px; padding-left: 10px; animation: slideDown 0.4s ease; }
+.package-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; transition: transform 0.3s; }
+.package-card:hover { transform: scale(1.02); }
+.edit-btn { background: #FFD700; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+.edit-btn:hover { background: #e6c800; }
+
+/* Modal */
+.modal { display: none; position: fixed; z-index: 5; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+.modal-content { background: white; margin: auto; padding: 20px; width: 40%; border-radius: 10px; }
+.close-btn { float: right; font-size: 24px; cursor: pointer; }
+.save-btn { background: #FFD700; border: none; padding: 10px; border-radius: 6px; width: 100%; margin-top: 15px; cursor: pointer; }
+
+/* Footer */
+footer { background: #4e4e4e; color: white; padding: 25px 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-left: 220px; }
+footer h4 { margin-bottom: 10px; }
+footer hr { width: 30px; border: 2px solid #FFD700; margin-bottom: 15px; }
+footer ul { list-style: none; }
+footer ul li { margin-bottom: 10px; }
+footer ul li a { color: #ccc; text-decoration: none; transition: color 0.3s; }
+footer ul li a:hover { color: #FFD700; }
+.footer-col .social-links a { display: inline-block; height: 40px; width: 40px; background-color: rgba(255,255,255,0.2); margin:0 10px 10px 0; text-align: center; line-height: 40px; border-radius: 50%; color: #ffffff; transition: all 0.5s ease; }
+.footer-col .social-links a:hover { color: #24262b; background-color: #ffffff; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity: 1; transform: translateY(0);} }
+@keyframes slideDown { from {opacity: 0; height: 0;} to {opacity: 1; height: auto;} }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { position: relative; width: 100%; flex-direction: row; overflow-x: auto; justify-content: space-around; padding: 15px; }
+  .main-content { margin-left: 0; padding: 20px; }
+  footer { margin-left: 0; }
+}
   </style>
 </head>
-<body class="min-h-screen flex">
+<body>
+  <script>
+    function toggleCategory(element) {
+  const list = element.nextElementSibling;
+  list.style.display = (list.style.display === "block") ? "none" : "block";
+}
+
+function openModal(packageName) {
+  document.getElementById('editModal').style.display = 'block';
+  document.getElementById('packageName').value = packageName;
+}
+
+function closeModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById('editModal');
+  if (event.target == modal) {
+    closeModal();
+  }
+};
+
+  </script>
+
+<div class="container">
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-xl p-6 flex flex-col justify-between">
-    <div>
-      <h1 class="text-2xl font-bold mb-6 text-yellow-400">evenraw.</h1>
-      <ul class="space-y-4">
-        <li><a href="#" class="hover:text-yellow-400">Users</a></li>
-        <li><a href="#" class="hover:text-yellow-400">Bookings</a></li>
-        <li><a href="#" class="hover:text-yellow-400 font-bold">Packages</a></li>
-        <li><a href="#" class="hover:text-yellow-400">Portfolio</a></li>
-        <li><a href="#" class="hover:text-yellow-400">Analytics</a></li>
-        <li><a href="#" class="hover:text-yellow-400">Contact Us</a></li>
-        <li><a href="#" class="hover:text-yellow-400">Feedback</a></li>
-      </ul>
-    </div>
-    <div class="text-sm text-gray-500">
-      <p>&copy; 2025 Evenraw</p>
-    </div>
-  </aside>
+  <div class="sidebar">
+    <div class="logo">EvenRaw</div>
+    <a href="#">Users</a>
+    <a href="#">Bookings</a>
+    <a href="#">Portfolio</a>
+    <a class="active" href="#">Packages</a>
+    <a href="#">Analysis</a>
+    <a href="#">Contact List</a>
+    <a href="#">Feedbacks</a>
+  </div>
 
   <!-- Main Content -->
-  <main class="flex-1 p-8">
-    <div class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-bold gradient-text">Packages</h2>
-      <div class="flex items-center space-x-4">
-        <span class="text-gray-700 font-medium">John Cena</span>
-        <img src="https://via.placeholder.com/40" class="rounded-full border" alt="User">
-      </div>
-    </div>
+  <div class="main-content">
+    <header>
+      <h1>Packages</h1>
+      <div class="user-info"><i class="fa fa-user"></i> John Cena</div>
+    </header>
 
-    <!-- Package Categories -->
-    <div class="space-y-10 animate-fadeIn">
-      <!-- Reusable Card Component -->
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Food Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+    <!-- Packages Section -->
+    <section class="packages">
+      <h2>Photography</h2>
+
+      <!-- Package Category -->
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Food Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button>
           </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <button class="edit-btn" onclick="openModal('Silver Package')">Edit</button>
           </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <button class="edit-btn" onclick="openModal('Gold Package')">Edit</button>
           </div>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Hotel Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-        </div>
-      </div>
-      
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Commercial Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
+      <!-- More categories (Wedding, Model, Commercial...) -->
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Wedding Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
+          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
+          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Model Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Hotel Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
+          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
+          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Event Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Food Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Food Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Food Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Comnercial Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
+          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
+          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
         </div>
       </div>
 
-      <!-- Repeat similar structure for Wedding, Model, Commercial, etc. -->
-      <div>
-        <h3 class="text-xl font-semibold mb-4">Wedding Photography</h3>
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Bronze Package</h4>
-            <button onclick="openEditModal('Wedding Photography - Bronze')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Silver Package</h4>
-            <button onclick="openEditModal('Wedding Photography - Silver')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
-          <div class="p-6 bg-white rounded-2xl shadow hover:shadow-lg hover:scale-105 transition">
-            <h4 class="text-lg font-bold">Gold Package</h4>
-            <button onclick="openEditModal('Wedding Photography - Gold')" class="mt-3 px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Edit Package</button>
-          </div>
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Model Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
+          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
+          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
         </div>
       </div>
 
-      <!-- Add more sections for other categories similarly -->
-    </div>
-  </main>
+      <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Event Photography <i class="fa fa-chevron-down"></i></h3>
+        <div class="package-list">
+          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
+          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
+          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+        </div>
+      </div>
 
-  <!-- Edit Modal -->
-  <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-    <div class="bg-white p-8 rounded-xl w-96 shadow-xl">
-      <h3 id="editTitle" class="text-xl font-semibold mb-4">Edit Package</h3>
-      <input type="text" class="w-full p-3 border rounded mb-4" placeholder="Package Name">
-      <textarea class="w-full p-3 border rounded mb-4" placeholder="Package Details"></textarea>
-      <div class="flex justify-end space-x-3">
-        <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
-        <button class="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500">Save</button>
+      <!-- Add more sections as needed -->
+    </section>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2>Edit Package</h2>
+    <form>
+      <label for="packageName">Package Name</label>
+      <input type="text" id="packageName">
+      <label for="packagePrice">Price</label>
+      <input type="text" id="packagePrice">
+      <label for="packageDetails">Details</label>
+      <textarea id="packageDetails" rows="4"></textarea>
+      <button type="submit" class="save-btn">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div>
+    <h4>Menu</h4>
+    <hr>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Portfolio</a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Quote</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Get Help</h4>
+    <hr>
+    <ul>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">Reservations</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Events</h4>
+    <hr>
+    <ul>
+      <li><a href="#">Weddings</a></li>
+      <li><a href="#">Birthdays</a></li>
+      <li><a href="#">Graduations</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Follow Us</h4>
+    <hr>
+    <div class="footer-col">
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
       </div>
     </div>
   </div>
+</footer>
 
-  <script>
-    function openEditModal(title) {
-      document.getElementById('editTitle').textContent = "Edit " + title;
-      document.getElementById('editModal').classList.remove('hidden');
-    }
-    function closeEditModal() {
-      document.getElementById('editModal').classList.add('hidden');
-    }
-  </script>
+<script src="script.js"></script>
 </body>
 </html>
+
