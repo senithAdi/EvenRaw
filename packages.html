@@ -18,7 +18,7 @@ body {
 .container { display: flex; flex: 1; }
 
 /* Sidebar (from your code) */
-.sidebar { width: 220px; background: linear-gradient(180deg, #fff700, #ffe600); padding: 30px 20px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
+.sidebar { width: 220px; background: linear-gradient(180deg, #fff700, #ffe600); padding: 30px 10px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
 .logo { font-size: 1.8em; font-weight: 700; letter-spacing: 2px; }
 .sidebar a { text-decoration: none; color: #111; font-weight: 500; padding: 12px 10px; border-radius: 8px; transition: background 0.3s; }
 .sidebar a:hover, .sidebar a.active { background: rgba(0, 0, 0, 0.1); }
@@ -63,7 +63,7 @@ footer ul li a:hover { color: #FFD700; }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .sidebar { position: relative; width: 100%; flex-direction: row; overflow-x: auto; justify-content: space-around; padding: 15px; }
+  .sidebar { position: relative; width: 100%; flex-direction: row; overflow-x: auto; justify-content: space-around; padding: 10px; }
   .main-content { margin-left: 0; padding: 20px; }
   footer { margin-left: 0; }
 }
