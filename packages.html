@@ -18,7 +18,7 @@ body {
 .container { display: flex; flex: 1; }
 
 /* Sidebar (from your code) */
-.sidebar { width: 220px; background: linear-gradient(180deg, #fff700, #ffe600); padding: 30px 10px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
+.sidebar { width: 220px; background: linear-gradient(180deg, #fff200, #ffe600); padding: 30px 10px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
 .logo { font-size: 1.8em; font-weight: 700; letter-spacing: 2px; }
 .sidebar a { text-decoration: none; color: #111; font-weight: 500; padding: 12px 10px; border-radius: 8px; transition: background 0.3s; }
 .sidebar a:hover, .sidebar a.active { background: rgba(0, 0, 0, 0.1); }
@@ -42,9 +42,17 @@ header h1 { font-size: 28px; color: #333; }
 
 /* Modal */
 .modal { display: none; position: fixed; z-index: 5; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-.modal-content { background: white; margin: auto; padding: 20px; width: 40%; border-radius: 10px; }
-.close-btn { float: right; font-size: 24px; cursor: pointer; }
-.save-btn { background: #FFD700; border: none; padding: 10px; border-radius: 6px; width: 100%; margin-top: 15px; cursor: pointer; }
+.modal-content { background: white; margin: auto; padding: 30px; width: 40%; border-radius: 10px; max-width: 500px; }
+.close-btn { float: right; font-size: 24px; cursor: pointer; color: #666; }
+.close-btn:hover { color: #333; }
+.save-btn { background: #FFD700; border: none; padding: 12px; border-radius: 6px; width: 100%; margin-top: 20px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
+.save-btn:hover { background: #e6c800; }
+
+/* Form styling */
+.modal-content form { margin-top: 20px; }
+.modal-content label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+.modal-content input, .modal-content textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; box-sizing: border-box; font-size: 14px; }
+.modal-content input:focus, .modal-content textarea:focus { outline: none; border-color: #FFD700; box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
 
 /* Footer */
 footer { background: #4e4e4e; color: white; padding: 25px 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-left: 220px; }
@@ -72,26 +80,89 @@ footer ul li a:hover { color: #FFD700; }
 <body>
   <script>
     function toggleCategory(element) {
-  const list = element.nextElementSibling;
-  list.style.display = (list.style.display === "block") ? "none" : "block";
-}
+      const list = element.nextElementSibling;
+      list.style.display = (list.style.display === "block") ? "none" : "block";
+    }
 
-function openModal(packageName) {
-  document.getElementById('editModal').style.display = 'block';
-  document.getElementById('packageName').value = packageName;
-}
+    function openModal(packageName) {
+      document.getElementById('editModal').style.display = 'block';
+      document.getElementById('packageName').value = packageName;
+      
+      // Load existing package data
+      fetch(`get_package.php?name=${encodeURIComponent(packageName)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            document.getElementById('packagePrice').value = data.data.price;
+            document.getElementById('packageDetails').value = data.data.details;
+          } else {
+            console.log('Package not found, starting with empty form');
+          }
+        })
+        .catch(error => {
+          console.error('Error loading package data:', error);
+        });
+    }
 
-function closeModal() {
-  document.getElementById('editModal').style.display = 'none';
-}
+    function closeModal() {
+      document.getElementById('editModal').style.display = 'none';
+      // Clear form fields
+      document.getElementById('packageName').value = '';
+      document.getElementById('packagePrice').value = '';
+      document.getElementById('packageDetails').value = '';
+    }
 
-window.onclick = function(event) {
-  const modal = document.getElementById('editModal');
-  if (event.target == modal) {
-    closeModal();
-  }
-};
+    window.onclick = function(event) {
+      const modal = document.getElementById('editModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    };
 
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('#editModal form');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const packageName = document.getElementById('packageName').value;
+        const packagePrice = document.getElementById('packagePrice').value;
+        const packageDetails = document.getElementById('packageDetails').value;
+        
+        if (!packageName || !packagePrice || !packageDetails) {
+          alert('Please fill in all fields');
+          return;
+        }
+        
+        // Send data to backend
+        fetch('package.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            packageName: packageName,
+            packagePrice: packagePrice,
+            packageDetails: packageDetails
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('Package updated successfully!');
+            closeModal();
+            // Optionally reload the page or update the UI
+            location.reload();
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while updating the package');
+        });
+      });
+    });
   </script>
 
 <div class="container">
@@ -157,7 +228,7 @@ window.onclick = function(event) {
       </div>
 
       <div class="package-category">
-        <h3 onclick="toggleCategory(this)">Comnercial Photography <i class="fa fa-chevron-down"></i></h3>
+        <h3 onclick="toggleCategory(this)">Commercial Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
           <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
@@ -193,13 +264,13 @@ window.onclick = function(event) {
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
     <h2>Edit Package</h2>
-    <form>
+    <form id="packageEditForm">
       <label for="packageName">Package Name</label>
-      <input type="text" id="packageName">
+      <input type="text" id="packageName" name="packageName" required>
       <label for="packagePrice">Price</label>
-      <input type="text" id="packagePrice">
+      <input type="text" id="packagePrice" name="packagePrice" required>
       <label for="packageDetails">Details</label>
-      <textarea id="packageDetails" rows="4"></textarea>
+      <textarea id="packageDetails" name="packageDetails" rows="4" required></textarea>
       <button type="submit" class="save-btn">Save Changes</button>
     </form>
   </div>
@@ -252,4 +323,3 @@ window.onclick = function(event) {
 <script src="script.js"></script>
 </body>
 </html>
-
