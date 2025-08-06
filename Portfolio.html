@@ -15,98 +15,181 @@
   <header>
     <div class="logo">EvenRaw</div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">About Us</a>
-      <a href="#">Portfolio</a>
-      <a href="#">Contact Us</a>
-      <a href="#" class="btn-yellow">Get a Quote</a>
+      <a href="Home.html">Home</a>
+      <a href="About us.html">About Us</a>
+      <a href="Portfolio.php">Portfolio</a>
+      <a href="contact us.html">Contact Us</a>
+      <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
       <a href="#" class="user"> <img src="man.png" style="width: 40px; height:40px;"></a>
     </nav>
   </header>
-<section>
-</head>
-<body>
 
+<section>
   <h1>Explore Our Photography Categories</h1>
-      <section>
-    <button onclick="togglePhotos('Commercial')">Commercial Photography ▼</button>
-  <div id="wedding" style="display: none;">
-    <div style="display: flex; gap: 10px;">
-      <img src="uploads/Com1.jpg" alt="Com 1" width="200">
-      <img src="uploads/Com2.jpg" alt="Com 2" width="200">
-      <img src="uploads/Com3.jpg" alt="Com 3" width="200">
-      <button onclick="seeMore('Food')">See More</button>
+      
+  <!-- Commercial Photography -->
+  <section>
+    <button onclick="togglePhotos('commercial')">Commercial Photography ▼</button>
+    <div id="commercial" style="display: none;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <?php
+        include 'db_connectPortfolio.php';
+        try {
+            $stmt = $conn->prepare("SELECT * FROM portfolio WHERE category = 'commercial' ORDER BY id DESC LIMIT 6");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($result) > 0) {
+                foreach ($result as $row) {
+                    $image_path = "uploads/" . htmlspecialchars($row['image']);
+                    if (file_exists($image_path)) {
+                        echo '<img src="' . $image_path . '" alt="Commercial Photography" width="200" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">';
+                    }
+                }
+            } else {
+                // Show default images if no database images
+                echo '<img src="uploads/Com1.jpg" alt="Com 1" width="200">';
+                echo '<img src="uploads/Com2.jpg" alt="Com 2" width="200">';
+                echo '<img src="uploads/Com3.jpg" alt="Com 3" width="200">';
+            }
+        } catch(PDOException $e) {
+            // Show default images on error
+            echo '<img src="uploads/Com1.jpg" alt="Com 1" width="200">';
+            echo '<img src="uploads/Com2.jpg" alt="Com 2" width="200">';
+            echo '<img src="uploads/Com3.jpg" alt="Com 3" width="200">';
+        }
+        ?>
+        <button onclick="seeMore('commercial')">See More</button>
+      </div>
     </div>
-    <div id="wedding-more" style="display: none; margin-top: 10px; display: flex; gap: 10px;">
-      <img src="uploads/Com4.jpg" alt="Com 4" width="200">
-      <img src="uploads/Com5.jpg" alt="Com 5" width="200">
-    </div>
-  </div>
-    </section>
-    <section>
+  </section>
+
+  <!-- Food Photography -->
+  <section>
     <button onclick="togglePhotos('food')">Food Photography ▼</button>
-  <div id="wedding" style="display: none;">
-    <div style="display: flex; gap: 10px;">
-      <img src="/Users/macbook/Desktop/Evenraw/DSC08252.JPG" alt="Food 1" width="200">
-      <img src="/Users/macbook/Desktop/Evenraw/DSC07995.jpg" alt="Food 2" width="200">
-      <img src="/Users/macbook/Desktop/Evenraw/_DSC6212-Enhanced-NR.JPG" alt="Food 3" width="200">
-      <button onclick="seeMore('Food')">See More</button>
+    <div id="food" style="display: none;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <?php
+        try {
+            $stmt = $conn->prepare("SELECT * FROM portfolio WHERE category = 'food' ORDER BY id DESC LIMIT 6");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($result) > 0) {
+                foreach ($result as $row) {
+                    $image_path = "uploads/" . htmlspecialchars($row['image']);
+                    if (file_exists($image_path)) {
+                        echo '<img src="' . $image_path . '" alt="Food Photography" width="200" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">';
+                    }
+                }
+            } else {
+                // Show default images if no database images
+                echo '<img src="/Users/macbook/Desktop/Evenraw/DSC08252.JPG" alt="Food 1" width="200">';
+                echo '<img src="/Users/macbook/Desktop/Evenraw/DSC07995.jpg" alt="Food 2" width="200">';
+                echo '<img src="/Users/macbook/Desktop/Evenraw/_DSC6212-Enhanced-NR.JPG" alt="Food 3" width="200">';
+            }
+        } catch(PDOException $e) {
+            // Show default images on error
+            echo '<img src="/Users/macbook/Desktop/Evenraw/DSC08252.JPG" alt="Food 1" width="200">';
+            echo '<img src="/Users/macbook/Desktop/Evenraw/DSC07995.jpg" alt="Food 2" width="200">';
+            echo '<img src="/Users/macbook/Desktop/Evenraw/_DSC6212-Enhanced-NR.JPG" alt="Food 3" width="200">';
+        }
+        ?>
+        <button onclick="seeMore('food')">See More</button>
+      </div>
     </div>
-    <div id="wedding-more" style="display: none; margin-top: 10px; display: flex; gap: 10px;">
-      <img src="uploads/Food.jpg" alt="Food 4" width="200">
-      <img src="uploads/Food.jpg" alt="Food 5" width="200">
+  </section>
+
+  <!-- Hotel Photography -->
+  <section>
+    <button onclick="togglePhotos('hotel')">Hotel Photography ▼</button>
+    <div id="hotel" style="display: none;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <?php
+        try {
+            $stmt = $conn->prepare("SELECT * FROM portfolio WHERE category = 'hotel' ORDER BY id DESC LIMIT 6");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($result) > 0) {
+                foreach ($result as $row) {
+                    $image_path = "uploads/" . htmlspecialchars($row['image']);
+                    if (file_exists($image_path)) {
+                        echo '<img src="' . $image_path . '" alt="Hotel Photography" width="200" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">';
+                    }
+                }
+            } else {
+                // Show default images if no database images
+                echo '<img src="uploads/hotel1.jpg" alt="Hotel 1" width="200">';
+                echo '<img src="uploads/hotel2.jpg" alt="Hotel 2" width="200">';
+                echo '<img src="uploads/hotel3.jpg" alt="Hotel 3" width="200">';
+            }
+        } catch(PDOException $e) {
+            // Show default images on error
+            echo '<img src="uploads/hotel1.jpg" alt="Hotel 1" width="200">';
+            echo '<img src="uploads/hotel2.jpg" alt="Hotel 2" width="200">';
+            echo '<img src="uploads/hotel3.jpg" alt="Hotel 3" width="200">';
+        }
+        ?>
+        <button onclick="seeMore('hotel')">See More</button>
+      </div>
     </div>
-  </div>
-    </section>
-      <section>
-  <button onclick="togglePhotos('hotel')">Hotel Photography ▼</button>
-  <div id="hotel" style="display: none;">
-    <div style="display: flex; gap: 10px;">
-      <img src="uploads/hotel1.jpg" alt="Hotel 1" width="200">
-      <img src="uploads/hotel2.jpg" alt="Hotel 2" width="200">
-      <img src="uploads/hotel3.jpg" alt="Hotel 3" width="200">
-      <button onclick="seeMore('hotel')">See More</button>
+  </section>
+
+  <!-- Wedding Photography -->
+  <section>
+    <button onclick="togglePhotos('wedding')">Wedding Photography ▼</button>
+    <div id="wedding" style="display: none;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <?php
+        try {
+            $stmt = $conn->prepare("SELECT * FROM portfolio WHERE category = 'wedding' ORDER BY id DESC LIMIT 6");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (count($result) > 0) {
+                foreach ($result as $row) {
+                    $image_path = "uploads/" . htmlspecialchars($row['image']);
+                    if (file_exists($image_path)) {
+                        echo '<img src="' . $image_path . '" alt="Wedding Photography" width="200" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">';
+                    }
+                }
+            } else {
+                // Show default images if no database images
+                echo '<img src="uploads/wedding1.jpg" alt="Wedding 1" width="200">';
+                echo '<img src="uploads/wedding2.jpg" alt="Wedding 2" width="200">';
+                echo '<img src="uploads/wedding3.jpg" alt="Wedding 3" width="200">';
+            }
+        } catch(PDOException $e) {
+            // Show default images on error
+            echo '<img src="uploads/wedding1.jpg" alt="Wedding 1" width="200">';
+            echo '<img src="uploads/wedding2.jpg" alt="Wedding 2" width="200">';
+            echo '<img src="uploads/wedding3.jpg" alt="Wedding 3" width="200">';
+        }
+        ?>
+        <button onclick="seeMore('wedding')">See More</button>
+      </div>
     </div>
-    <div id="hotel-more" style="display: none; margin-top: 10px; display: flex; gap: 10px;">
-      <img src="uploads/hotel4.jpg" alt="Hotel 4" width="200">
-    </div>
-  </div>
   </section>
 </section>
-    <section>
-<button onclick="togglePhotos('wedding')">Wedding Photography ▼</button>
-<div id="wedding" style="display: none;">
-    <div style="display: flex; gap: 10px;">
-      <img src="uploads/wedding1.jpg" alt="Wedding 1" width="200">
-      <img src="uploads/wedding2.jpg" alt="Wedding 2" width="200">
-      <img src="uploads/wedding3.jpg" alt="Wedding 3" width="200">
-      <button onclick="seeMore('wedding')">See More</button>
-    </div>
-    <div id="wedding-more" style="display: none; margin-top: 10px; display: flex; gap: 10px;">
-      <img src="uploads/wedding4.jpg" alt="Wedding 4" width="200">
-      <img src="uploads/wedding5.jpg" alt="Wedding 5" width="200">
-    </div>
-  </div>
-  </section>
-
 
   <footer>
     <div>
       <h4>Menu</h4>
       <hr>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Portfolio</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Quote</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="Portfolio.php">Portfolio</a></li>
+        <li><a href="About us.html">About Us</a></li>
+        <li><a href="contact us.html">Contact Us</a></li>
+        <li><a href="Get Quote.html">Quote</a></li>
       </ul>
     </div>
     <div>
       <h4>Get Help</h4>
       <hr>
       <ul>
-        <li><a href="#">FAQ</a></li>
+        <li><a href="FAQ.html">FAQ</a></li>
         <li><a href="#">Reservations</a></li>
       </ul>
     </div>
@@ -122,16 +205,32 @@
     <div>
       <h4>Follow Us</h4>
       <hr>
-            <div class="footer-col">
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-            </div>
+      <div class="footer-col">
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
+
+  <script>
+    function togglePhotos(category) {
+      const div = document.getElementById(category);
+      if (div.style.display === 'none') {
+        div.style.display = 'block';
+      } else {
+        div.style.display = 'none';
+      }
+    }
+
+    function seeMore(category) {
+      // You can add more functionality here
+      console.log('See more clicked for ' + category);
+    }
+  </script>
 </body>
 
 </html>

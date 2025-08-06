@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Portfolio</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    body {
+  background: linear-gradient(to bottom right, #fffbe6, #f6f6f6);
+  color: #333;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.upload-container {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  padding: 30px;
+  max-width: 500px;
+  margin: 60px auto 0 auto;
+}
+
+.upload-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2em;
+  color: #222;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fafafa;
+  transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border: 1.5px solid #ffd700;
+  outline: none;
+}
+
+.btn-submit {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background: #229954;
+}
+
+.btn-cancel {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #7f8c8d;
+}
+
+@media (max-width: 600px) {
+  .upload-container {
+    padding: 15px;
+    max-width: 95vw;
+  }
+}
+</style>
+<form method="POST" action="portfolio_add.php" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="commercial">Commercial Photography</option>
+            <option value="food">Food Photography</option>
+            <option value="hotel">Hotel Photography</option>
+            <option value="wedding">Wedding Photography</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="image">Image:</label>
+        <input type="file" name="image" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+        <button type="submit">Upload Photo</button>
+    </div>
+</form>
