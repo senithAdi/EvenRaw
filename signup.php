@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     try {
         // Check if email already exists
-        $stmt = $conn->prepare("SELECT id FROM user WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
         
         if ($stmt->rowCount() > 0) {
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         // Insert new user
-        $stmt = $conn->prepare("INSERT INTO user(name, email, password) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users(name, email, password) VALUES (?, ?, ?)");
         $stmt->execute([$name, $email, $hashed_password]);
         
         // Redirect to login page after successful registration

@@ -14,6 +14,27 @@
       transform: translateY(-5px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
+    .success-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4CAF50;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      z-index: 10000;
+      animation: fadeIn 0.5s, fadeOut 0.5s 4.5s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; top: 0; }
+      to { opacity: 1; top: 20px; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; top: 20px; }
+      to { opacity: 0; top: 0; }
+    }
   </style>
 </head>
 <body class="bg-gray-100 flex">
@@ -46,73 +67,145 @@
       </div>
     </header>
 
-    <!-- Contact Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Contact Card -->
-      <div class="card bg-white rounded-2xl p-6 shadow hover:shadow-lg">
-        <div class="flex items-center space-x-4">
-          <img src="https://i.pravatar.cc/60" class="w-14 h-14 rounded-full" alt="">
-          <div>
-            <h2 class="text-lg font-semibold">John Cena</h2>
-            <p class="text-gray-500">Senior Photographer</p>
-            <p class="text-gray-600 text-sm mt-2">+94 12 34 56 789</p>
-            <p class="text-gray-600 text-sm">johncena123@gmail.com</p>
-          </div>
-        </div>
-      </div>
-      <!-- Repeat cards -->
-      <div class="card bg-white rounded-2xl p-6 shadow hover:shadow-lg">
-        <div class="flex items-center space-x-4">
-          <img src="https://i.pravatar.cc/60" class="w-14 h-14 rounded-full" alt="">
-          <div>
-            <h2 class="text-lg font-semibold">John Cena</h2>
-            <p class="text-gray-500">Senior Photographer</p>
-            <p class="text-gray-600 text-sm mt-2">+94 12 34 56 789</p>
-            <p class="text-gray-600 text-sm">johncena123@gmail.com</p>
-          </div>
-        </div>
-      </div>
-      <!-- Add More Button -->
-      <div id="addContactBtn" class="cursor-pointer flex items-center justify-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 hover:bg-yellow-50 transition">
-        <i class='bx bx-plus text-4xl text-gray-500'></i>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="contactsTable" class="bg-white divide-y divide-gray-200">
+            <!-- Contacts will be loaded here -->
+          </tbody>
+        </table>
       </div>
     </div>
   </main>
 
-  <!-- Add Contact Modal -->
-  <div id="contactModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl p-6 w-96 shadow-lg">
-      <h2 class="text-xl font-semibold mb-4">Add New Contact</h2>
-      <form id="contactForm" class="space-y-4">
-        <input type="text" placeholder="Name" class="w-full p-2 border rounded" required>
-        <input type="text" placeholder="Role" class="w-full p-2 border rounded" required>
-        <input type="tel" placeholder="Phone" class="w-full p-2 border rounded" required>
-        <input type="email" placeholder="Email" class="w-full p-2 border rounded" required>
-        <div class="flex justify-end gap-3 mt-4">
-          <button type="button" id="cancelBtn" class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded">Save</button>
-        </div>
-      </form>
+      <h2 class="text-xl font-semibold mb-4">Confirm Deletion</h2>
+      <p class="mb-6">Are you sure you want to delete this contact submission?</p>
+      <div class="flex justify-end gap-3">
+        <button id="cancelDeleteBtn" class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
+        <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const modal = document.getElementById('contactModal');
-    const addBtn = document.getElementById('addContactBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-
-    addBtn.addEventListener('click', () => {
-      modal.classList.remove('hidden');
+    let currentDeleteId = null;
+    
+    // Load contacts when page loads
+    document.addEventListener('DOMContentLoaded', loadContacts);
+    
+    async function loadContacts() {
+      try {
+        const response = await fetch('get_contacts.php');
+        const contacts = await response.json();
+        
+        const tableBody = document.getElementById('contactsTable');
+        tableBody.innerHTML = '';
+        
+        if (contacts.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="px-6 py-4 text-center text-gray-500">No contact submissions found</td>
+            </tr>
+          `;
+          return;
+        }
+        
+        contacts.forEach(contact => {
+          const row = document.createElement('tr');
+          row.className = 'hover:bg-gray-50';
+          row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">${contact.first_name} ${contact.last_name}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">${contact.email}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900">${contact.phone || 'N/A'}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-900 max-w-xs truncate">${contact.message}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-500">${new Date(contact.submission_date).toLocaleString()}</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+              <button onclick="showDeleteModal(${contact.id})" class="text-red-600 hover:text-red-900">Delete</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error loading contacts:', error);
+        alert('Error loading contacts');
+      }
+    }
+    
+    function showDeleteModal(id) {
+      currentDeleteId = id;
+      document.getElementById('confirmModal').classList.remove('hidden');
+    }
+    
+    document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+      document.getElementById('confirmModal').classList.add('hidden');
+      currentDeleteId = null;
     });
-
-    cancelBtn.addEventListener('click', () => {
-      modal.classList.add('hidden');
-    });
-
-    document.getElementById('contactForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Contact Added Successfully!');
-      modal.classList.add('hidden');
+    
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+      if (!currentDeleteId) return;
+      
+      try {
+        const response = await fetch('delete_contact.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: currentDeleteId })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Show success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'success-message';
+          successDiv.textContent = 'Contact submission deleted successfully!';
+          document.body.appendChild(successDiv);
+          
+          // Remove message after animation
+          setTimeout(() => {
+            successDiv.remove();
+          }, 5000);
+          
+          // Reload contacts
+          loadContacts();
+        } else {
+          alert('Error deleting contact: ' + (result.error || 'Unknown error'));
+        }
+      } catch (error) {
+        console.error('Error deleting contact:', error);
+        alert('Error deleting contact');
+      } finally {
+        document.getElementById('confirmModal').classList.add('hidden');
+        currentDeleteId = null;
+      }
     });
   </script>
 </body>
