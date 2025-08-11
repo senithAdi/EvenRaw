@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Photos - EvenRaw Admin</title>
+  <link rel="stylesheet" href="portfolioAdmin.css">
+</head>
+
+<body>
+    <section>
+  <h2>Upload Photo to Portfolio</h2>
+  <div class="form">
+  <form action="upload.php" method="POST" enctype="multipart/form-data">
+    <label>Choose Category:</label>
+    <select name="category" required>
+      <option value="Commercial">Commercial</option>
+      <option value="Food">Food</option>
+      <option value="Hotel">Hotel</option>
+      <option value="Wedding">Wedding</option>
+    </select><br><br>
+
+    <label>Choose Image:</label>
+    <input type="file" name="image" accept="image/*" required><br><br>
+
+    <input type="submit" value="Upload">
+    
+  </form>
+  </div>
+</body>
+</html>

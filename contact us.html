@@ -552,12 +552,12 @@
   <header>
     <div class="logo">EvenRaw</div>
     <nav>
-      <a href="#home">Home</a>
-      <a href="#about">About Us</a>
-      <a href="#portfolio">Portfolio</a>
-      <a href="#contact">Contact Us</a>
-      <a href="#quote" class="btn-yellow">Get a Quote</a>
-      <a href="#" class="btn-yellow">
+      <a href="#">Home</a>
+      <a href="About us.html">About Us</a>
+      <a href="Portfolio.html">Portfolio</a>
+      <a href="contact us.html">Contact Us</a>
+      <a href="#" class="btn-yellow">Get a Quote</a>
+      <a href="Login.html" class="btn-yellow">
         <i class="fas fa-user"></i>
       </a>
     </nav>
@@ -578,8 +578,7 @@
       <div class="contact-form">
         <h2>Send Us a Message</h2>
         <p class="contact-form-subtitle">Fill out the form below and we'll get back to you within 24 hours.</p>
-        
-        <form>
+          <form action="process_contact.php" method="POST">
           <div class="form-row">
             <div class="form-group">
               <label for="firstName">First Name *</label>
@@ -602,27 +601,6 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="service">Service Interested In *</label>
-            <select id="service" name="service" required>
-              <option value="">Select a service</option>
-              <option value="wedding">Wedding Photography</option>
-              <option value="event">Event Photography</option>
-              <option value="portrait">Portrait Sessions</option>
-              <option value="commercial">Commercial Photography</option>
-              <option value="videography">Videography</option>
-              <option value="graphic-design">Graphic Design</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="eventDate">Event Date</label>
-              <input type="date" id="eventDate" name="eventDate">
-            </div>
-            
-          </div>
 
           <div class="form-group">
             <label for="message">Tell Us About Your Project *</label>

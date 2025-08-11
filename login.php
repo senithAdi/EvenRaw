@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Get user by email
-        $stmt = $conn->prepare("SELECT id, name, email, password, is_admin FROM user WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, name, email, password, is_admin FROM users WHERE email = ?");
         $stmt->execute([$email]);
 
         if ($stmt->rowCount() === 1) {
