@@ -1,3 +1,48 @@
+<?php
+session_start();
+require_once 'db_connect.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Fetch user data
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Handle form submission for updating user details
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $contact_number = $_POST['contact_number'];
+    $nic_number = $_POST['nic_number'];
+    
+    // Password update only if new password is provided
+    $password = $user['password'];
+    if (!empty($_POST['new_password'])) {
+        $password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+    }
+    
+    try {
+        $stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, password = ?, contact_number = ?, nic_number = ? WHERE id = ?");
+        $stmt->execute([$name, $email, $password, $contact_number, $nic_number, $user_id]);
+        
+        // Refresh user data
+        $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $success_message = "Profile updated successfully!";
+    } catch (PDOException $e) {
+        $error_message = "Error updating profile: " . $e->getMessage();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +69,7 @@
     }
 
     /* Header Styles */
-   header {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -227,6 +272,103 @@
       color: #e74c3c !important;
     }
 
+    /* Edit Profile Form */
+    .edit-form {
+      display: none;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .edit-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #FFD700;
+      color: #333;
+    }
+
+    .btn-primary:hover {
+      background: #FFA500;
+    }
+
+    .btn-secondary {
+      background: #ddd;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #ccc;
+    }
+
+    .edit-btn {
+      background: #FFD700;
+      color: #333;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .edit-btn:hover {
+      background: #FFA500;
+    }
+
+    .message {
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
 
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -271,7 +413,6 @@
         padding: 12px 15px;
         font-size: 0.9rem;
       }
-      
     }
   </style>
 </head>
@@ -281,12 +422,12 @@
   <header>
     <div class="logo">Evenraw</div>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">About Us</a>
-      <a href="#">Portfolio</a>
-      <a href="#">Contact Us</a>
-      <a href="#" class="btn-yellow">Get a Quote</a>
-      <a href="#" class="btn-yellow">
+      <a href="Home.html">Home</a>
+      <a href="About us.html">About Us</a>
+      <a href="Portfolio.html">Portfolio</a>
+      <a href="contact us.html">Contact Us</a>
+      <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
+      <a href="Login.html" class="btn-yellow">
         <i class="fas fa-user"></i>
       </a>
     </nav>
@@ -299,19 +440,79 @@
     </div>
     
     <div class="profile-container">
+      <?php if (isset($success_message)): ?>
+        <div class="message success"><?php echo $success_message; ?></div>
+      <?php endif; ?>
+      <?php if (isset($error_message)): ?>
+        <div class="message error"><?php echo $error_message; ?></div>
+      <?php endif; ?>
+      
       <!-- User Header -->
       <div class="user-header">
         <div class="user-avatar">
           <i class="fas fa-user"></i>
         </div>
         <div class="user-info">
-          <h2>John Cena</h2>
-          <p>User</p>
+          <h2><?php echo htmlspecialchars($user['name']); ?></h2>
+          <p><?php echo $user['is_admin'] ? 'Admin' : ''; ?></p>
+          <button class="edit-btn" onclick="toggleEditForm()">Edit Profile</button>
         </div>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <div id="editForm" class="edit-form">
+        <form method="POST" action="">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="contact_number">Contact Number</label>
+            <input type="tel" id="contact_number" name="contact_number" value="<?php echo htmlspecialchars($user['contact_number'] ?? ''); ?>">
+          </div>
+          <div class="form-group">
+            <label for="nic_number">NIC Number</label>
+            <input type="text" id="nic_number" name="nic_number" value="<?php echo htmlspecialchars($user['nic_number'] ?? ''); ?>">
+          </div>
+          <div class="form-group">
+            <label for="new_password">New Password (leave blank to keep current)</label>
+            <input type="password" id="new_password" name="new_password">
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="toggleEditForm()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
       </div>
 
       <!-- Profile Menu -->
       <ul class="profile-menu">
+        <li>
+          <a href="#">
+            <i class="fas fa-envelope"></i>
+            <?php echo htmlspecialchars($user['email']); ?>
+          </a>
+        </li>
+        <?php if (!empty($user['contact_number'])): ?>
+        <li>
+          <a href="#">
+            <i class="fas fa-phone"></i>
+            <?php echo htmlspecialchars($user['contact_number']); ?>
+          </a>
+        </li>
+        <?php endif; ?>
+        <?php if (!empty($user['nic_number'])): ?>
+        <li>
+          <a href="#">
+            <i class="fas fa-id-card"></i>
+            <?php echo htmlspecialchars($user['nic_number']); ?>
+          </a>
+        </li>
+        <?php endif; ?>
         <li>
           <a href="#">
             <i class="fas fa-star"></i>
@@ -331,19 +532,7 @@
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="fas fa-cog"></i>
-            Settings
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <i class="fas fa-file-contract"></i>
-            Terms & Conditions
-          </a>
-        </li>
-        <li>
-          <a href="#" class="logout-link">
+          <a href="logout.php" class="logout-link" onclick="return confirmLogout()">
             <i class="fas fa-sign-out-alt"></i>
             Log out
           </a>
@@ -351,8 +540,12 @@
       </ul>
     </div>
   </section>
-
- <footer>
+<script>
+function confirmLogout() {
+  return confirm('Are you sure you want to log out?');
+}
+</script>
+  <footer>
     <div>
       <h4>Menu</h4>
       <hr>
@@ -388,18 +581,25 @@
       <h4>Follow Us</h4>
       <hr>
       <div class="footer-col">
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-            </div>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
     </div>
     <div class="copyright">
-  <p>© 2025 EvenRaw Photography. All rights reserved. | Professional Photography Services</p>
-</div>
+      <p>© 2025 EvenRaw Photography. All rights reserved. | Professional Photography Services</p>
+    </div>
   </footer>
+
+  <script>
+    function toggleEditForm() {
+      const form = document.getElementById('editForm');
+      form.classList.toggle('active');
+    }
+  </script>
 </body>
 
 </html>

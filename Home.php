@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,7 +20,7 @@
       <a href="About us.html">About Us</a>
       <a href="Portfolio.html">Portfolio</a>
       <a href="contact us.html">Contact Us</a>
-      <a href="#" class="btn-yellow">Get a Quote</a>
+      <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
       <a href="Login.html" class="btn-yellow">
         <i class="fas fa-user"></i>
       </a>

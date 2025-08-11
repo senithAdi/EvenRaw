@@ -1,10 +1,29 @@
- <!DOCTYPE html>
+<?php
+session_start();
+require_once 'db_connect.php';
+
+// Check if admin is logged in
+if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
+    header("Location: login.php");
+    exit();
+}
+
+// Fetch all users data
+$stmt = $conn->prepare("SELECT id, name, email, nic_number, contact_number FROM users");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Get current admin name for display
+$admin_name = $_SESSION['name'] ?? 'Admin';
+?>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Bookings</title>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <title>Admin Users</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -124,12 +143,36 @@
       transition: 0.3s;
     }
 
-    select {
-      padding: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    .action-btns {
+      display: flex;
+      gap: 8px;
     }
-footer {
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn-edit {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .btn-delete {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    footer {
       background: #4e4e4e;
       color: white;
       padding: 25px 30px;
@@ -167,23 +210,24 @@ footer {
       color: #FFD700;
     }
 
+    .footer-col .social-links a {
+      display: inline-block;
+      height: 40px;
+      width: 40px;
+      background-color: rgba(255,255,255,0.2);
+      margin:0 10px 10px 0;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 50%;
+      color: #ffffff;
+      transition: all 0.5s ease;
+    }
+    
+    .footer-col .social-links a:hover {
+      color: #24262b;
+      background-color: #ffffff;
+    }
 
-.footer-col .social-links a{
-	display: inline-block;
-	height: 40px;
-	width: 40px;
-	background-color: rgba(255,255,255,0.2);
-	margin:0 10px 10px 0;
-	text-align: center;
-	line-height: 40px;
-	border-radius: 50%;
-	color: #ffffff;
-	transition: all 0.5s ease;
-}
-.footer-col .social-links a:hover{
-	color: #24262b;
-	background-color: #ffffff;
-}
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -204,16 +248,22 @@ footer {
         padding: 20px;
       }
 
+      header h1 {
+        margin-left: 0;
+        font-size: 22px;
+      }
+
       .bookings-container {
         padding: 20px;
       }
 
       th, td {
         padding: 10px;
+        font-size: 13px;
       }
 
-      table {
-        font-size: 13px;
+      footer {
+        margin-left: 0;
       }
     }
   </style>
@@ -222,19 +272,19 @@ footer {
   <div class="container">
     <div class="sidebar">
       <div class="logo">EvenRaw</div>
-      <a href="#">Users</a>
-      <a href="#">Bookings</a>
-      <a href="#">Portfolio</a>
-      <a href="#">Packages</a>
-      <a href="#">Analysis</a>
-      <a href="#">Contact List</a>
-      <a href="#">Feedbacks</a>
+      <a href="admin_users.php"><i class="fas fa-users"></i> Users</a>
+      <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+      <a href="#"><i class="fas fa-images"></i> Portfolio</a>
+      <a href="#"><i class="fas fa-box-open"></i> Packages</a>
+      <a href="#"><i class="fas fa-chart-line"></i> Analysis</a>
+      <a href="#"><i class="fas fa-address-book"></i> Contact List</a>
+      <a href="#"><i class="fas fa-comment-alt"></i> Feedbacks</a>
     </div>
 
     <div class="main-content">
       <header>
-        <h1>Bookings</h1>
-        <div class="user-info">👤 John Cena</div>
+        <h1>Users Management</h1>
+        <div class="user-info">👤 <?php echo htmlspecialchars($admin_name); ?></div>
       </header>
 
       <div class="bookings-container">
@@ -243,22 +293,30 @@ footer {
             <tr>
               <th>User ID</th>
               <th>Name</th>
-              <th>Date of birth</th>
-              <th>Nic</th>
               <th>Email</th>
+              <th>NIC</th>
               <th>Contact Number</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>-A1000</td><td>John</td><td>2000.01.08</td><td>200327922018</td><td>Johncena@gmail.com</td><td>0769998880</td></tr>
-            <tr><td>-A1000</td><td>Rock</td><td>1995.10.15</td><td>200327922018</td><td>rock@gmail.com</td><td>0754223451</td></tr>
-            <tr><td>-A1000</td><td>Roman</td><td>2003.11.01</td><td>200327922018</td><td>romanreigns@gmail.com</td><td>0773322154</td></tr>
-            <tr><td>-A1000</td><td>Michaels</td><td>1980.02.15</td><td>200327922018</td><td>michaelcole@gmail.com</td><td>0786338976</td></tr>
-            <tr><td>-A1000</td><td>Steve</td><td>1999.12.12</td><td>200327922018</td><td>steveborden@gmail.com</td><td>0742190875</td></tr>
-            <tr><td>-A1000</td><td>Randy</td><td>2007.04.26</td><td>200327922018</td><td>randyoron@gmail.com</td><td>0756442337</td></tr>
-            <tr><td>-A1000</td><td>Brock</td><td>2001.04.10</td><td>200327922018</td><td>brocklesnar@gmail.com</td><td>0778907651</td></tr>
-            <tr><td>-A1000</td><td>Anderson</td><td>2003.08.21</td><td>200327922018</td><td>arnanderson@gmail.com</td><td>0761177088</td></tr>
-            <tr><td>-A1000</td><td>Terry</td><td>1994.10.01</td><td>200327922018</td><td>terryfunk@gmail.com</td><td>0761175786</td></tr> 
+            <?php foreach ($users as $user): ?>
+              <tr>
+                <td><?php echo htmlspecialchars($user['id']); ?></td>
+                <td><?php echo htmlspecialchars($user['name']); ?></td>
+                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                <td><?php echo htmlspecialchars($user['nic_number'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($user['contact_number'] ?? 'N/A'); ?></td>
+                <td class="action-btns">
+                  <button class="btn btn-edit" onclick="editUser(<?php echo $user['id']; ?>)">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="btn btn-delete" onclick="confirmDelete(<?php echo $user['id']; ?>)">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            <?php endforeach; ?>
           </tbody>
         </table>
       </div>
@@ -297,15 +355,31 @@ footer {
     <div>
       <h4>Follow Us</h4>
       <hr>
-            <div class="footer-col">
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-            </div>
+      <div class="footer-col">
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
     </div>
   </footer>
+
+  <script>
+    function editUser(userId) {
+      // You can implement edit functionality here
+      // For example, redirect to an edit page:
+      window.location.href = 'edit_user.php?id=' + userId;
+    }
+
+    function confirmDelete(userId) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        // You can implement delete functionality here
+        // For example, redirect to a delete handler:
+        window.location.href = 'delete_user.php?id=' + userId;
+      }
+    }
+  </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $dbname = 'evenraw';
-$username = 'root'; // Change as per your setup
-$password = ''; // Change as per your setup
+$username = 'root'; 
+$password = '';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

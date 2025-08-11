@@ -1,6 +1,5 @@
 <?php
 require_once 'db_connect.php';
-
 // Define admin credentials (alternative to database check)
 $admin_email = "admin@example.com";
 $admin_password = "admin123"; // Change this to a secure password
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['logged_in'] = true;
         $_SESSION['is_admin'] = true;
 
-        header("Location: admin.html");
+        header("Location: Home.php");
         exit();
     }
 
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($userData['is_admin'] == 1) {
                     header("Location: BookingsBE.php");
                 } else {
-                    header("Location: Home.html");
+                    header("Location: User profile.php");
                 }
                 exit();
             } else {
@@ -60,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Error: " . $e->getMessage());
     }
 } else {
-    header("Location: index.html");
+    header("Location: Home.php");
     exit();
 }
 ?>
