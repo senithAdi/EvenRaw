@@ -2,6 +2,7 @@
 // Include database connection
 require_once 'db_connect.php';
 
+
 // Initialize variables and error messages
 $errors = [];
 $success = false;

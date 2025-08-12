@@ -422,7 +422,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <header>
     <div class="logo">Evenraw</div>
     <nav>
-      <a href="Home.html">Home</a>
+      <a href="Home.php">Home</a>
       <a href="About us.html">About Us</a>
       <a href="Portfolio.html">Portfolio</a>
       <a href="contact us.html">Contact Us</a>

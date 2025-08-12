@@ -1,4 +1,6 @@
-
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,9 +23,9 @@
       <a href="Portfolio.html">Portfolio</a>
       <a href="contact us.html">Contact Us</a>
       <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
-      <a href="Login.html" class="btn-yellow">
-        <i class="fas fa-user"></i>
-      </a>
+<a href="<?php echo isset($_SESSION['logged_in']) ? 'User profile.php' : 'Login.html'; ?>" class="btn-yellow">
+    <i class="fas fa-user"></i>
+</a>
     </nav>
   </header>
 
@@ -123,19 +125,19 @@
       <h4>Menu</h4>
       <hr>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Portfolio</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Quote</a></li>
+        <li><a href="Home.php">Home</a></li>
+        <li><a href="Portfolio.html">Portfolio</a></li>
+        <li><a href="About us.html">About Us</a></li>
+        <li><a href="contact us.html">Contact Us</a></li>
+        <li><a href="Get Quote.html">Quote</a></li>
       </ul>
     </div>
     <div>
       <h4>Get Help</h4>
       <hr>
       <ul>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Reservations</a></li>
+        <li><a href="FAQ.html">FAQ</a></li>
+        <li><a href="Get Quote.html">Reservations</a></li>
         <li><a href="#">Support</a></li>
         <li><a href="#">Terms of Service</a></li>
       </ul>
@@ -144,10 +146,10 @@
       <h4>Events</h4>
       <hr>
       <ul>
-        <li><a href="#">Weddings</a></li>
-        <li><a href="#">Birthdays</a></li>
-        <li><a href="#">Graduations</a></li>
-        <li><a href="#">Corporate Events</a></li>
+        <li><a href="Portfolio.html">Weddings</a></li>
+        <li><a href="Portfolio.html">Birthdays</a></li>
+        <li><a href="Portfolio.html">Graduations</a></li>
+        <li><a href="Portfolio.html">Corporate Events</a></li>
       </ul>
     </div>
     <div>

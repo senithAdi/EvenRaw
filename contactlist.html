@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <style>
+    
     .card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -35,6 +36,19 @@
       from { opacity: 1; top: 20px; }
       to { opacity: 0; top: 0; }
     }
+
+    .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
   </style>
 </head>
 <body class="bg-gray-100 flex">
@@ -59,7 +73,7 @@
     <header class="flex justify-between items-center mb-8">
       <h1 class="text-2xl font-semibold">Contact List</h1>
       <div class="flex items-center gap-4">
-        <i class='bx bx-bell text-2xl'></i>
+        <i class='bx bx-bell text-2xl relative'></i>
         <div class="flex items-center space-x-2">
           <img src="https://i.pravatar.cc/40" class="rounded-full" alt="User">
           <span>John Cena</span>
@@ -100,7 +114,53 @@
     </div>
   </div>
 
+  
+
   <script>
+
+// Notification functionality
+let notificationInterval;
+
+function checkForNotifications() {
+    fetch('get_notifications.php')
+        .then(response => response.json())
+        .then(data => {
+            const bellIcon = document.querySelector('.bx-bell');
+            
+            // Remove any existing badge first
+            const existingBadge = bellIcon.querySelector('.notification-badge');
+            if (existingBadge) {
+                existingBadge.remove();
+            }
+            
+            if (data.success && data.unreadCount > 0) {
+                // Create and append the badge
+                const badge = document.createElement('span');
+                badge.className = 'notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
+                badge.textContent = data.unreadCount;
+                bellIcon.appendChild(badge);
+                
+                // Add animation class to the bell icon itself
+                bellIcon.classList.add('animate-pulse');
+            } else {
+                // Remove animation if no notifications
+                bellIcon.classList.remove('animate-pulse');
+            }
+        })
+        .catch(error => console.error('Error checking notifications:', error));
+}
+
+// Start checking for notifications every 30 seconds
+document.addEventListener('DOMContentLoaded', () => {
+    checkForNotifications(); // Check immediately on load
+    notificationInterval = setInterval(checkForNotifications, 30000); // Then every 30 seconds
+});
+
+// When leaving the page, clear the interval
+window.addEventListener('beforeunload', () => {
+    clearInterval(notificationInterval);
+});
+
     let currentDeleteId = null;
     
     // Load contacts when page loads
@@ -207,6 +267,8 @@
         currentDeleteId = null;
       }
     });
+    
   </script>
+  
 </body>
 </html>

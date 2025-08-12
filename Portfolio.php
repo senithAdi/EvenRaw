@@ -111,12 +111,14 @@
   <header>
     <div class="logo">EvenRaw</div>
     <nav>
-      <a href="Home.html">Home</a>
+      <a href="Home.php">Home</a>
       <a href="About us.html">About Us</a>
-      <a href="Portfolio.php">Portfolio</a>
+      <a href="Portfolio.html">Portfolio</a>
       <a href="contact us.html">Contact Us</a>
       <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
-      <a href="#" class="user"> <img src="man.png" style="width: 40px; height:40px;"></a>
+      <a href="Login.html" class="btn-yellow">
+        <i class="fas fa-user"></i>
+      </a>
     </nav>
   </header>
 
