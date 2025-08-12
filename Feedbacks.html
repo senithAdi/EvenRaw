@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evenraw - Customer Feedback</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #24262b;
+            color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover:not(.btn-yellow) {
+            color: #FFD700;
+        }
+
+        .btn-yellow {
+            background: #FFD700;
+            color: black;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .btn-yellow:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Content Styles */
+        .feedback-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .feedback-header h1 {
+            font-size: 2.5rem;
+            color: #24262b;
+            margin-bottom: 15px;
+        }
+
+        .feedback-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .feedback-form {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #FFD700;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .rating-option {
+            display: none;
+        }
+
+        .rating-label {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rating-label:hover {
+            background: #FFD700;
+        }
+
+        .rating-option:checked + .rating-label {
+            background: #FFD700;
+            color: white;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            background: #FFD700;
+            color: #24262b;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .submit-btn:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Footer Styles */
+        footer {
+            position: relative;
+            background: #4e4e4e;
+            color: white;
+            padding: 15px 30px 45px 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+        }
+
+        footer h4 {
+            margin-bottom: 10px;
+        }
+
+        footer hr {
+            width: 50px;
+            border: 2px solid #FFD700;
+            margin-bottom: 20px;
+        }
+
+        footer ul {
+            list-style: none;
+        }
+
+        footer ul li {
+            margin-bottom: 12px;
+        }
+
+        footer ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        footer ul li a:hover {
+            color: #FFD700;
+            padding-left: 5px;
+        }
+
+        .socials {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .socials i {
+            font-size: 1.5rem;
+            background: #666;
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .socials i:hover {
+            transform: translateY(-3px);
+            background-color: #FFD700;
+            color: #111;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .footer-col .social-links a {
+            display: inline-block;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin:0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #ffffff;
+            transition: all 0.5s ease;
+        }
+
+        .footer-col .social-links a:hover {
+            color: #24262b;
+            background-color: #ffffff;
+        }
+
+        .copyright {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            padding: 0 40px;
+        }
+
+        .copyright p {
+            margin: 0;
+            padding: 10px 0;
+            border-top: 1px solid #666;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            nav {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .btn-yellow {
+                display: block;
+                text-align: center;
+                width: 100%;
+            }
+
+            .feedback-header h1 {
+                font-size: 2rem;
+            }
+
+            .feedback-form {
+                padding: 25px;
+            }
+
+            footer {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">evenraw</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Portfolio</a>
+            <a href="#">Contact Us</a>
+            <a href="#" class="btn-yellow">Get a Quote</a>
+                  <a href="Login.html" class="btn-yellow">
+        <i class="fas fa-user"></i>
+      </a>
+        </nav>
+    </header>
+
+    <main class="feedback-container">
+        <div class="feedback-header">
+            <h1>Share Your Feedback</h1>
+            <p>We value your opinion! Please take a moment to let us know about your experience with our services. Your feedback helps us improve.</p>
+        </div>
+
+        <div id="successMessage" class="success-message">
+            Thank you for your feedback! We appreciate your time and will use your input to improve our services.
+        </div>
+
+        <form id="feedbackForm" class="feedback-form" action="process_feedback.php" method="POST">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="service">Service Used</label>
+                <select id="service" name="service" class="form-control" required>
+                    <option value="">Select a service</option>
+                    <option value="wedding">Wedding Photography</option>
+                    <option value="portrait">Portrait Session</option>
+                    <option value="event">Event Coverage</option>
+                    <option value="commercial">Commercial Photography</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Overall Satisfaction</label>
+                <div class="rating-group">
+                    <input type="radio" id="rating1" name="rating" value="1" class="rating-option">
+                    <label for="rating1" class="rating-label">1</label>
+                    
+                    <input type="radio" id="rating2" name="rating" value="2" class="rating-option">
+                    <label for="rating2" class="rating-label">2</label>
+                    
+                    <input type="radio" id="rating3" name="rating" value="3" class="rating-option">
+                    <label for="rating3" class="rating-label">3</label>
+                    
+                    <input type="radio" id="rating4" name="rating" value="4" class="rating-option">
+                    <label for="rating4" class="rating-label">4</label>
+                    
+                    <input type="radio" id="rating5" name="rating" value="5" class="rating-option" checked>
+                    <label for="rating5" class="rating-label">5</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Your Feedback</label>
+                <textarea id="comments" name="comments" class="form-control" placeholder="What did you like about our service? What could we improve?" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="contact_me" value="1"> 
+                    I'd like to be contacted about my feedback
+                </label>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Feedback</button>
+
+            <div class="form-footer">
+                <p>Your feedback is important to us. We read every submission carefully.</p>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <div>
+            <h4>Menu</h4>
+            <hr>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">Quote</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Get Help</h4>
+            <hr>
+            <ul>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Reservations</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Events</h4>
+            <hr>
+            <ul>
+                <li><a href="#">Weddings</a></li>
+                <li><a href="#">Birthdays</a></li>
+                <li><a href="#">Graduations</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Follow Us</h4>
+            <hr>
+            <div class="footer-col">
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 Evenraw. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = this.querySelector('.submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+        
+        // Get form data
+        const formData = new FormData(this);
+        
+        // Send data to server
+        fetch('process_feedback.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                // Show success message
+                const successMsg = document.getElementById('successMessage');
+                successMsg.style.display = 'block';
+                successMsg.textContent = data.message;
+                successMsg.scrollIntoView({ behavior: 'smooth' });
+                
+                // Reset form after showing success
+                setTimeout(() => {
+                    document.getElementById('feedbackForm').reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Feedback';
+                }, 3000);
+            } else {
+                alert('Error: ' + data.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Feedback';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting your feedback. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Feedback';
+        });
+    });
+</script>
+</body>
+</html>

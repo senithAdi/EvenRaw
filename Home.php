@@ -12,6 +12,107 @@ session_start();
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+/* Testimonials Section */
+.testimonials-section {
+  padding: 80px 50px;
+  background-color: #f8f8f8;
+  text-align: center;
+}
+
+.testimonials-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.testimonials-section p {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  color: #555;
+}
+
+.testimonials-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: left;
+  transition: transform 0.3s;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-10px);
+}
+
+.testimonial-rating {
+  margin-bottom: 15px;
+  color: #FFD700;
+}
+
+.testimonial-text {
+  font-style: italic;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.testimonial-text::before,
+.testimonial-text::after {
+  color: #FFD700;
+  font-size: 2rem;
+  line-height: 1;
+  position: absolute;
+}
+
+.testimonial-text::before {
+  content: '"';
+  top: -10px;
+  left: -15px;
+}
+
+.testimonial-text::after {
+  content: '"';
+  bottom: -25px;
+  right: -15px;
+}
+
+.testimonial-author {
+  margin-top: 20px;
+}
+
+.testimonial-author strong {
+  display: block;
+  color: #222;
+}
+
+.testimonial-author span {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.no-testimonials {
+  grid-column: 1 / -1;
+  padding: 30px;
+  color: #666;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .testimonials-section {
+    padding: 60px 20px;
+  }
+}
+  </style>
 </head>
 
 <body>
@@ -117,6 +218,40 @@ session_start();
       <h3>Graphic Design</h3>
       <p>Bold, vibrant designs that elevate your brand across digital and print media.</p>
     </div>
+  </div>
+</section>
+
+
+<section class="testimonials-section">
+  <h2>What Our Clients Say</h2>
+  <p>Hear from our satisfied customers about their experiences with EvenRaw.</p>
+  
+  <div class="testimonials-container">
+    <?php
+    require_once 'db_connect.php';
+    $stmt = $conn->query("SELECT * FROM feedback WHERE showcase = 1 ORDER BY submission_date DESC LIMIT 3");
+    $showcased_feedbacks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (empty($showcased_feedbacks)): ?>
+      <div class="no-testimonials">
+        <p>Check back soon for client testimonials!</p>
+      </div>
+    <?php else: ?>
+      <?php foreach ($showcased_feedbacks as $feedback): ?>
+        <div class="testimonial-card">
+          <div class="testimonial-rating">
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+              <i class="fas fa-star <?php echo $i <= $feedback['rating'] ? 'gold' : ''; ?>"></i>
+            <?php endfor; ?>
+          </div>
+          <p class="testimonial-text">"<?php echo htmlspecialchars($feedback['comments']); ?>"</p>
+          <div class="testimonial-author">
+            <strong><?php echo htmlspecialchars($feedback['name']); ?></strong>
+            <span><?php echo htmlspecialchars(ucfirst($feedback['service'])); ?> Service</span>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
   </div>
 </section>
 
