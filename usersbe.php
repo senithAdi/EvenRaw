@@ -266,6 +266,167 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
         margin-left: 0;
       }
     }
+    <!-- Add this CSS in the style section -->
+.btn-generate-report {
+  background: linear-gradient(to right, #ffcc00, #ff9900);
+  color: #333;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn-generate-report:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Report Modal Styles */
+.report-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+  width: 50%;
+  max-width: 600px;
+  position: relative;
+  animation: slideIn 0.4s ease;
+}
+
+.close-modal {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #000;
+}
+
+.report-options {
+  margin: 20px 0;
+}
+
+.option-group {
+  margin-bottom: 20px;
+}
+
+.option-group label { 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.option-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.option-group select, .option-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.format-options {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.format-option {
+  flex: 1;
+  text-align: center;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.format-option:hover, .format-option.selected {
+  border-color: #ffcc00;
+  background-color: #fffce6;
+}
+
+.format-option i {
+  font-size: 24px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.generate-btn {
+  background: linear-gradient(to right, #ffcc00, #ff9900);
+  color: #333;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: all 0.3s;
+}
+
+.generate-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+@keyframes slideIn {
+  from {transform: translateY(-50px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+/* Loading spinner */
+.loading {
+  display: none;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ffcc00;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
   </style>
 </head>
 <body>
@@ -285,6 +446,9 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
       <header>
         <h1>Users Management</h1>
         <div class="user-info">👤 <?php echo htmlspecialchars($admin_name); ?></div>
+        <button class="btn-generate-report" onclick="openReportModal()">
+        <i class="fas fa-chart-pie"></i> Generate Report
+        </button>
       </header>
 
       <div class="bookings-container">
@@ -322,7 +486,58 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
       </div>
     </div>
   </div>
-
+<!-- Report Generation Modal -->
+<div id="reportModal" class="report-modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeReportModal()">&times;</span>
+    <h2>Generate User Report</h2>
+    
+    <div class="report-options">
+      <div class="option-group">
+        <label for="reportType">Report Type</label>
+        <select id="reportType">
+          <option value="detailed">Detailed User List</option>
+          <option value="summary">Statistical Summary</option>
+          <option value="analysis">User Analysis</option>
+        </select>
+      </div>
+      
+      <div class="option-group">
+        <label>Format</label>
+        <div class="format-options">
+          <div class="format-option selected" data-format="pdf">
+            <i class="fas fa-file-pdf"></i>
+            <span>PDF</span>
+          </div>
+          <div class="format-option" data-format="excel">
+            <i class="fas fa-file-excel"></i>
+            <span>Excel</span>
+          </div>
+          <div class="format-option" data-format="csv">
+            <i class="fas fa-file-csv"></i>
+            <span>CSV</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="option-group">
+        <label for="includeCharts">
+          <input type="checkbox" id="includeCharts" checked >
+          Include Charts & Graphs
+        </label>
+      </div>
+    </div>
+    
+    <div class="loading" id="reportLoading">
+      <div class="spinner"></div>
+      <p>Generating your report...</p>
+    </div>
+    
+    <button class="generate-btn" onclick="generateReport()">
+      Generate Report Now
+    </button>
+  </div>
+</div>
   <footer>
     <div>
       <h4>Menu</h4>
@@ -381,5 +596,87 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
       }
     }
   </script>
+  <script>
+// Report generation functions
+let selectedFormat = 'pdf';
+
+function openReportModal() {
+  document.getElementById('reportModal').style.display = 'block';
+}
+
+function closeReportModal() {
+  document.getElementById('reportModal').style.display = 'none';
+}
+
+// Select format option
+document.querySelectorAll('.format-option').forEach(option => {
+  option.addEventListener('click', function() {
+    document.querySelectorAll('.format-option').forEach(opt => {
+      opt.classList.remove('selected');
+    });
+    this.classList.add('selected');
+    selectedFormat = this.getAttribute('data-format');
+  });
+});
+
+// Close modal if clicked outside
+window.onclick = function(event) {
+  const modal = document.getElementById('reportModal');
+  if (event.target == modal) {
+    closeReportModal();
+  }
+}
+
+function generateReport() {
+  const reportType = document.getElementById('reportType').value;
+  const includeCharts = document.getElementById('includeCharts').checked;
+  
+  // Show loading animation
+  document.getElementById('reportLoading').style.display = 'block';
+  
+  // Simulate processing time
+  setTimeout(function() {
+    // Based on the selected format, trigger download
+    switch(selectedFormat) {
+      case 'pdf':
+        generatePDFReport(reportType);
+        break;
+      case 'excel':
+        generateExcelReport(reportType);
+        break;
+      case 'csv':
+        generateCSVReport(reportType);
+        break;
+    }
+    
+    // Hide loading animation
+    document.getElementById('reportLoading').style.display = 'none';
+    
+    // Close the modal
+    closeReportModal();
+    
+    // Show success message
+    alert('Report generated successfully!');
+  }, 2000);
+}
+
+function generatePDFReport(type, includeCharts) {
+    try {
+        window.open('generate_pdf_report.php?type=' + type + '&charts=' + (includeCharts ? 1 : 0), '_blank');
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        // Fallback to HTML report
+        window.open('generate_html_report.php?type=' + type + '&charts=' + (includeCharts ? 1 : 0), '_blank');
+    }
+}
+
+function generateExcelReport(type) {
+    window.open('generate_excel_report.php?type=' + type, '_blank');
+}
+
+function generateCSVReport(type) {
+    window.open('generate_csv_report.php?type=' + type, '_blank');
+}
+</script>
 </body>
 </html>
