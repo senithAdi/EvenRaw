@@ -37,8 +37,10 @@ header h1 { font-size: 28px; color: #333; }
 .package-list { display: none; margin-top: 10px; padding-left: 10px; animation: slideDown 0.4s ease; }
 .package-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; transition: transform 0.3s; }
 .package-card:hover { transform: scale(1.02); }
-.edit-btn { background: #FFD700; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+.edit-btn { background: #FFD700; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; margin-right: 5px; }
 .edit-btn:hover { background: #e6c800; }
+.delete-btn { background: #ff4444; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; color: white; }
+.delete-btn:hover { background: #cc0000; }
 
 /* Modal */
 .modal { display: none; position: fixed; z-index: 5; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
@@ -84,19 +86,33 @@ footer ul li a:hover { color: #FFD700; }
       list.style.display = (list.style.display === "block") ? "none" : "block";
     }
 
-    function openModal(packageName) {
+    function openModal(packageName, category) {
       document.getElementById('editModal').style.display = 'block';
       document.getElementById('packageName').value = packageName;
-      
+      document.getElementById('packageCategory').value = category;
+
       // Load existing package data
-      fetch(`get_package.php?name=${encodeURIComponent(packageName)}`)
+      fetch(`get_package.php?name=${encodeURIComponent(packageName)}&category=${encodeURIComponent(category)}`)
         .then(response => response.json())
         .then(data => {
           if (data.status === 'success') {
-            document.getElementById('packagePrice').value = data.data.price;
-            document.getElementById('packageDetails').value = data.data.details;
+            document.getElementById('packagePrice').value = data.data.price || '';
+            document.getElementById('packageDetails').value = data.data.details || '';
+            const linkWrap = document.getElementById('currentPdfWrap');
+            const link = document.getElementById('currentPdfLink');
+            if (data.data.pdf_path) {
+              link.href = data.data.pdf_path;
+              link.textContent = 'View current PDF';
+              linkWrap.style.display = 'block';
+            } else {
+              link.href = '#';
+              link.textContent = '';
+              linkWrap.style.display = 'none';
+            }
           } else {
-            console.log('Package not found, starting with empty form');
+            document.getElementById('packagePrice').value = '';
+            document.getElementById('packageDetails').value = '';
+            document.getElementById('currentPdfWrap').style.display = 'none';
           }
         })
         .catch(error => {
@@ -108,8 +124,34 @@ footer ul li a:hover { color: #FFD700; }
       document.getElementById('editModal').style.display = 'none';
       // Clear form fields
       document.getElementById('packageName').value = '';
+      document.getElementById('packageCategory').value = '';
       document.getElementById('packagePrice').value = '';
       document.getElementById('packageDetails').value = '';
+      document.getElementById('quotePdf').value = '';
+      document.getElementById('currentPdfWrap').style.display = 'none';
+    }
+
+    function deletePackage(packageName, category) {
+      if (confirm('Are you sure you want to delete the PDF and hide "' + packageName + '" in ' + category + '?')) {
+        fetch('delete_package.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ packageName, category })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            alert('PDF deleted and package hidden!');
+            location.reload();
+          } else {
+            alert('Error: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while deleting the PDF');
+        });
+      }
     }
 
     window.onclick = function(event) {
@@ -119,39 +161,39 @@ footer ul li a:hover { color: #FFD700; }
       }
     };
 
-    // Handle form submission
+    // Handle form submission (multipart/form-data)
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.querySelector('#editModal form');
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const packageName = document.getElementById('packageName').value;
+        const packageCategory = document.getElementById('packageCategory').value;
         const packagePrice = document.getElementById('packagePrice').value;
         const packageDetails = document.getElementById('packageDetails').value;
-        
-        if (!packageName || !packagePrice || !packageDetails) {
-          alert('Please fill in all fields');
+        const quotePdf = document.getElementById('quotePdf').files[0];
+
+        if (!packageName || !packageCategory) {
+          alert('Package name and category are required');
           return;
         }
-        
-        // Send data to backend
-        fetch('package.php', {
+
+        const fd = new FormData();
+        fd.append('packageName', packageName);
+        fd.append('packageCategory', packageCategory);
+        fd.append('packagePrice', packagePrice);
+        fd.append('packageDetails', packageDetails);
+        if (quotePdf) fd.append('quotePdf', quotePdf);
+
+        fetch('update_package.php', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            packageName: packageName,
-            packagePrice: packagePrice,
-            packageDetails: packageDetails
-          })
+          body: fd
         })
         .then(response => response.json())
         .then(data => {
           if (data.status === 'success') {
-            alert('Package updated successfully!');
+            alert('Package saved successfully!');
             closeModal();
-            // Optionally reload the page or update the UI
             location.reload();
           } else {
             alert('Error: ' + data.message);
@@ -159,7 +201,7 @@ footer ul li a:hover { color: #FFD700; }
         })
         .catch(error => {
           console.error('Error:', error);
-          alert('An error occurred while updating the package');
+          alert('An error occurred while saving the package');
         });
       });
     });
@@ -195,15 +237,24 @@ footer ul li a:hover { color: #FFD700; }
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
-            <button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Food Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Food Photography')">Delete PDF & Hide</button>
+            </div>
           </div>
           <div class="package-card">
             <p>Silver Package</p>
-            <button class="edit-btn" onclick="openModal('Silver Package')">Edit</button>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Food Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Food Photography')">Delete PDF & Hide</button>
+            </div>
           </div>
           <div class="package-card">
             <p>Gold Package</p>
-            <button class="edit-btn" onclick="openModal('Gold Package')">Edit</button>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Food Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Food Photography')">Delete PDF & Hide</button>
+            </div>
           </div>
         </div>
       </div>
@@ -212,45 +263,135 @@ footer ul li a:hover { color: #FFD700; }
       <div class="package-category">
         <h3 onclick="toggleCategory(this)">Wedding Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
-          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
-          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
-          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Wedding Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Wedding Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Wedding Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Wedding Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Wedding Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Wedding Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="package-category">
         <h3 onclick="toggleCategory(this)">Hotel Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
-          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
-          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
-          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Hotel Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Hotel Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Hotel Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Hotel Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Hotel Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Hotel Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="package-category">
         <h3 onclick="toggleCategory(this)">Commercial Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
-          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
-          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
-          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Commercial Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Commercial Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Commercial Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Commercial Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Commercial Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Commercial Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="package-category">
         <h3 onclick="toggleCategory(this)">Model Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
-          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
-          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
-          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Model Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Model Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Model Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Model Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Model Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Model Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="package-category">
         <h3 onclick="toggleCategory(this)">Event Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
-          <div class="package-card"><p>Bronze Package</p><button class="edit-btn" onclick="openModal('Bronze Package')">Edit</button></div>
-          <div class="package-card"><p>Silver Package</p><button class="edit-btn" onclick="openModal('Silver Package')">Edit</button></div>
-          <div class="package-card"><p>Gold Package</p><button class="edit-btn" onclick="openModal('Gold Package')">Edit</button></div>
+          <div class="package-card">
+            <p>Bronze Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Event Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Event Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Silver Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Silver Package', 'Event Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Silver Package', 'Event Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
+          <div class="package-card">
+            <p>Gold Package</p>
+            <div>
+              <button class="edit-btn" onclick="openModal('Gold Package', 'Event Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Event Photography')">Delete PDF & Hide</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -264,13 +405,19 @@ footer ul li a:hover { color: #FFD700; }
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
     <h2>Edit Package</h2>
-    <form id="packageEditForm">
+    <form id="packageEditForm" enctype="multipart/form-data">
       <label for="packageName">Package Name</label>
       <input type="text" id="packageName" name="packageName" required>
+      <input type="hidden" id="packageCategory" name="packageCategory">
       <label for="packagePrice">Price</label>
       <input type="text" id="packagePrice" name="packagePrice" required>
       <label for="packageDetails">Details</label>
       <textarea id="packageDetails" name="packageDetails" rows="4" required></textarea>
+      <div id="currentPdfWrap" style="display:none;margin:8px 0;">
+        <a id="currentPdfLink" href="#" target="_blank" rel="noopener"></a>
+      </div>
+      <label for="quotePdf">Quotation PDF (upload/replace)</label>
+      <input type="file" id="quotePdf" name="quotePdf" accept="application/pdf">
       <button type="submit" class="save-btn">Save Changes</button>
     </form>
   </div>

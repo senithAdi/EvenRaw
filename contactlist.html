@@ -6,8 +6,11 @@
   <title>Evenraw Admin - Contact List</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- Libraries for export functionality -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
-    
     .card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -38,17 +41,98 @@
     }
 
     .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+    
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      width: 500px;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+    
+    .checkbox-container input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #f59e0b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="bg-gray-100 flex">
@@ -73,6 +157,9 @@
     <header class="flex justify-between items-center mb-8">
       <h1 class="text-2xl font-semibold">Contact List</h1>
       <div class="flex items-center gap-4">
+        <button id="generateReportBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg flex items-center">
+          <i class='bx bx-file bx-sm mr-2'></i> Generate Report
+        </button>
         <i class='bx bx-bell text-2xl relative'></i>
         <div class="flex items-center space-x-2">
           <img src="https://i.pravatar.cc/40" class="rounded-full" alt="User">
@@ -114,67 +201,85 @@
     </div>
   </div>
 
-  
+  <!-- Report Generation Modal -->
+  <div id="reportModal" class="modal-overlay hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="text-lg font-semibold">Generate User Report</h3>
+        <button id="closeReportModal" class="text-gray-400 hover:text-gray-600">
+          <i class='bx bx-x text-2xl'></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+            <option>Detailed User List</option>
+            <option>Summary Report</option>
+            <option>Contact Statistics</option>
+          </select>
+        </div>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">Format</label>
+          <div class="flex space-x-4">
+            <label class="inline-flex items-center">
+              <input type="radio" name="format" value="pdf" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500" checked>
+              <span class="ml-2">PDF</span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" name="format" value="excel" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500">
+              <span class="ml-2">Excel</span>
+            </label>
+            <label class="inline-flex items-center">
+              <input type="radio" name="format" value="csv" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500">
+              <span class="ml-2">CSV</span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="checkbox-container">
+          <input type="checkbox" id="includeCharts" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500">
+          <label for="includeCharts" class="text-sm font-medium text-gray-700">Include Charts & Graphs</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelReportBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">Cancel</button>
+        <button id="generateReportNowBtn" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">Generate Report Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="text-center">
+      <div class="spinner mb-4"></div>
+      <p class="text-gray-700 font-medium">Generating your report...</p>
+    </div>
+  </div>
 
   <script>
-
-// Notification functionality
-let notificationInterval;
-
-function checkForNotifications() {
-    fetch('get_notifications.php')
-        .then(response => response.json())
-        .then(data => {
-            const bellIcon = document.querySelector('.bx-bell');
-            
-            // Remove any existing badge first
-            const existingBadge = bellIcon.querySelector('.notification-badge');
-            if (existingBadge) {
-                existingBadge.remove();
-            }
-            
-            if (data.success && data.unreadCount > 0) {
-                // Create and append the badge
-                const badge = document.createElement('span');
-                badge.className = 'notification-badge absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center';
-                badge.textContent = data.unreadCount;
-                bellIcon.appendChild(badge);
-                
-                // Add animation class to the bell icon itself
-                bellIcon.classList.add('animate-pulse');
-            } else {
-                // Remove animation if no notifications
-                bellIcon.classList.remove('animate-pulse');
-            }
-        })
-        .catch(error => console.error('Error checking notifications:', error));
-}
-
-// Start checking for notifications every 30 seconds
-document.addEventListener('DOMContentLoaded', () => {
-    checkForNotifications(); // Check immediately on load
-    notificationInterval = setInterval(checkForNotifications, 30000); // Then every 30 seconds
-});
-
-// When leaving the page, clear the interval
-window.addEventListener('beforeunload', () => {
-    clearInterval(notificationInterval);
-});
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
 
     let currentDeleteId = null;
+    let contactsData = [];
     
     // Load contacts when page loads
-    document.addEventListener('DOMContentLoaded', loadContacts);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadContacts();
+      setupReportModal();
+    });
     
     async function loadContacts() {
       try {
         const response = await fetch('get_contacts.php');
-        const contacts = await response.json();
+        contactsData = await response.json();
         
         const tableBody = document.getElementById('contactsTable');
         tableBody.innerHTML = '';
         
-        if (contacts.length === 0) {
+        if (contactsData.length === 0) {
           tableBody.innerHTML = `
             <tr>
               <td colspan="6" class="px-6 py-4 text-center text-gray-500">No contact submissions found</td>
@@ -183,7 +288,7 @@ window.addEventListener('beforeunload', () => {
           return;
         }
         
-        contacts.forEach(contact => {
+        contactsData.forEach(contact => {
           const row = document.createElement('tr');
           row.className = 'hover:bg-gray-50';
           row.innerHTML = `
@@ -268,7 +373,201 @@ window.addEventListener('beforeunload', () => {
       }
     });
     
+    // Report generation functionality
+    function setupReportModal() {
+      const generateReportBtn = document.getElementById('generateReportBtn');
+      const reportModal = document.getElementById('reportModal');
+      const closeReportModal = document.getElementById('closeReportModal');
+      const cancelReportBtn = document.getElementById('cancelReportBtn');
+      const generateReportNowBtn = document.getElementById('generateReportNowBtn');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      
+      // Open modal
+      generateReportBtn.addEventListener('click', () => {
+        reportModal.classList.remove('hidden');
+      });
+      
+      // Close modal
+      const closeModal = () => {
+        reportModal.classList.add('hidden');
+      };
+      
+      closeReportModal.addEventListener('click', closeModal);
+      cancelReportBtn.addEventListener('click', closeModal);
+      
+      // Generate report
+      generateReportNowBtn.addEventListener('click', () => {
+        const format = document.querySelector('input[name="format"]:checked').value;
+        const includeCharts = document.getElementById('includeCharts').checked;
+        
+        closeModal();
+        loadingOverlay.classList.remove('hidden');
+        
+        // Simulate processing time
+        setTimeout(() => {
+          generateReport(format, includeCharts);
+          loadingOverlay.classList.add('hidden');
+        }, 1500);
+      });
+    }
+    
+    function generateReport(format, includeCharts) {
+      switch(format) {
+        case 'pdf':
+          generatePDFReport(includeCharts);
+          break;
+        case 'excel':
+          generateExcelReport();
+          break;
+        case 'csv':
+          generateCSVReport();
+          break;
+      }
+    }
+    
+    function generatePDFReport(includeCharts) {
+      const doc = new jsPDF();
+      
+      // Title
+      doc.setFontSize(20);
+      doc.setTextColor(40, 40, 40);
+      doc.text('Contact List Report', 14, 22);
+      
+      // Date
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
+      
+      // Table
+      const tableColumn = ["Name", "Email", "Phone", "Message", "Date"];
+      const tableRows = [];
+      
+      contactsData.forEach(contact => {
+        const contactData = [
+          `${contact.first_name} ${contact.last_name}`,
+          contact.email,
+          contact.phone || 'N/A',
+          contact.message.length > 50 ? contact.message.substring(0, 50) + '...' : contact.message,
+          new Date(contact.submission_date).toLocaleDateString()
+        ];
+        tableRows.push(contactData);
+      });
+      
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 40,
+        theme: 'grid',
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [245, 158, 11] } // yellow-500
+      });
+      
+      // Add a simple chart if requested (basic implementation)
+      if (includeCharts && contactsData.length > 0) {
+        const finalY = doc.lastAutoTable.finalY + 10;
+        
+        if (finalY < 250) { // Ensure we have space on the page
+          doc.setFontSize(16);
+          doc.setTextColor(40, 40, 40);
+          doc.text('Contact Summary', 14, finalY);
+          
+          // Simple bar chart representation (simulated with lines)
+          const chartStartY = finalY + 10;
+          const chartHeight = 40;
+          const chartWidth = 150;
+          const chartStartX = 20;
+          
+          // Draw axes
+          doc.setDrawColor(100, 100, 100);
+          doc.line(chartStartX, chartStartY, chartStartX, chartStartY + chartHeight); // Y-axis
+          doc.line(chartStartX, chartStartY + chartHeight, chartStartX + chartWidth, chartStartY + chartHeight); // X-axis
+          
+          // Add note about charts in PDF
+          doc.setFontSize(10);
+          doc.setTextColor(150, 150, 150);
+          doc.text('* Basic chart representation. For detailed charts, consider Excel format.', 14, chartStartY + chartHeight + 15);
+        }
+      }
+      
+      // Save the PDF
+      doc.save('contact-list-report.pdf');
+      
+      // Show success message
+      showSuccessMessage('PDF report generated successfully!');
+    }
+    
+    function generateExcelReport() {
+      // Prepare data for Excel
+      const data = contactsData.map(contact => ({
+        'First Name': contact.first_name,
+        'Last Name': contact.last_name,
+        'Email': contact.email,
+        'Phone': contact.phone || 'N/A',
+        'Message': contact.message,
+        'Date': new Date(contact.submission_date).toLocaleString()
+      }));
+      
+      // Create worksheet
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      
+      // Create workbook
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Contacts');
+      
+      // Generate Excel file and download
+      XLSX.writeFile(workbook, 'contact-list-report.xlsx');
+      
+      // Show success message
+      showSuccessMessage('Excel report generated successfully!');
+    }
+    
+    function generateCSVReport() {
+      // Create CSV content
+      let csvContent = 'First Name,Last Name,Email,Phone,Message,Date\n';
+      
+      contactsData.forEach(contact => {
+        const row = [
+          `"${contact.first_name}"`,
+          `"${contact.last_name}"`,
+          `"${contact.email}"`,
+          `"${contact.phone || 'N/A'}"`,
+          `"${contact.message.replace(/"/g, '""')}"`,
+          `"${new Date(contact.submission_date).toLocaleString()}"`
+        ].join(',');
+        
+        csvContent += row + '\n';
+      });
+      
+      // Create download link
+      const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', 'contact-list-report.csv');
+      document.body.appendChild(link);
+      
+      // Trigger download
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      
+      // Show success message
+      showSuccessMessage('CSV report generated successfully!');
+    }
+    
+    function showSuccessMessage(message) {
+      const successDiv = document.createElement('div');
+      successDiv.className = 'success-message';
+      successDiv.textContent = message;
+      document.body.appendChild(successDiv);
+      
+      // Remove message after animation
+      setTimeout(() => {
+        successDiv.remove();
+      }, 5000);
+    }
   </script>
+  
   
 </body>
 </html>

@@ -1,42 +1,45 @@
 <?php
-// update_package.php
+// package.php - update package price/details for a given name+category
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Include database connection
 require_once 'db_connect.php';
 
 try {
-    // Get POST data
-    $data = json_decode(file_get_contents("php://input"), true);
-    
-    if (!$data) {
-        throw new Exception("No data received");
-    }
-    
-    $packageName = trim($data['packageName']);
-    $packagePrice = trim($data['packagePrice']);
-    $packageDetails = trim($data['packageDetails']);
-    
-    // Validate input
-    if (empty($packageName) || empty($packagePrice) || empty($packageDetails)) {
-        throw new Exception("All fields are required");
-    }
-    
-    // Prepare SQL (update by package name)
-    $stmt = $conn->prepare("UPDATE packages SET price = ?, details = ? WHERE name = ?");
-    $stmt->execute([$packagePrice, $packageDetails, $packageName]);
-    
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(["status" => "success", "message" => "Package updated successfully"]);
-    } else {
-        // If no rows were updated, the package might not exist
-        echo json_encode(["status" => "warning", "message" => "Package not found or no changes made"]);
-    }
-    
+	$data = json_decode(file_get_contents("php://input"), true);
+	if (!$data) throw new Exception("No data received");
+
+	$packageName = trim($data['packageName'] ?? '');
+	$packagePrice = trim($data['packagePrice'] ?? '');
+	$packageDetails = trim($data['packageDetails'] ?? '');
+	$category = trim($data['packageCategory'] ?? '');
+
+	if ($packageName === '' || $packagePrice === '' || $packageDetails === '' || $category === '') {
+		throw new Exception("All fields are required");
+	}
+
+	// Check existence and current values
+	$check = $conn->prepare("SELECT price, details FROM packages WHERE name = ? AND category = ?");
+	$check->execute([$packageName, $category]);
+	$current = $check->fetch(PDO::FETCH_ASSOC);
+
+	if (!$current) {
+		echo json_encode(["status" => "error", "message" => "Package not found"]);
+		exit;
+	}
+
+	if ($current['price'] === $packagePrice && $current['details'] === $packageDetails) {
+		echo json_encode(["status" => "warning", "message" => "No changes made"]);
+		exit;
+	}
+
+	$stmt = $conn->prepare("UPDATE packages SET price = ?, details = ? WHERE name = ? AND category = ?");
+	$stmt->execute([$packagePrice, $packageDetails, $packageName, $category]);
+
+	echo json_encode(["status" => "success", "message" => "Package updated"]);
 } catch (Exception $e) {
-    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+	echo json_encode(["status" => "error", "message" => $e->getMessage()]);
 }
 ?>
