@@ -291,6 +291,23 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
         grid-template-columns: 1fr;
       }
     }
+    .btn-report {
+    background: linear-gradient(to right, #FFD700, #FFA500);
+    color: #000;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.btn-report:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+}
   </style>
 </head>
 <body>
@@ -311,7 +328,17 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
         <h1>Customer Feedbacks</h1>
         <div class="user-info">👤 <?php echo htmlspecialchars($admin_name); ?></div>
       </header>
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="generate_feedback_report.php" class="btn btn-report" style="background: linear-gradient(to right, #FFD700, #FFA500); color: #000; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fas fa-file-pdf"></i> Generate PDF Report
+    </a>
+</div>
 
+<?php if (isset($_GET['deleted'])): ?>
+    <div class="success-message">
+        Feedback deleted successfully!
+    </div>
+<?php endif; ?>
       <?php if (isset($_GET['deleted'])): ?>
         <div class="success-message">
           Feedback deleted successfully!
