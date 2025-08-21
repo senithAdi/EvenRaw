@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
     exit();
 }
 
+
 // Get user ID from URL
 $user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -18,14 +19,14 @@ $user_exists = $stmt->fetch();
 
 if (!$user_exists) {
     $_SESSION['error_message'] = "User not found!";
-    header("Location: admin_users.php");
+    header("Location: usersbe.php");
     exit();
 }
 
 // Prevent admin from deleting themselves
 if ($user_id == $_SESSION['user_id']) {
     $_SESSION['error_message'] = "You cannot delete your own account!";
-    header("Location: admin_users.php");
+    header("Location: usersbe.php");
     exit();
 }
 
@@ -39,6 +40,6 @@ try {
     $_SESSION['error_message'] = "Error deleting user: " . $e->getMessage();
 }
 
-header("Location: admin_users.php");
+header("Location: usersbe.php");
 exit();
 ?>

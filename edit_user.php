@@ -18,7 +18,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$user) {
     $_SESSION['error_message'] = "User not found!";
-    header("Location: admin_users.php");
+    header("Location: usersbe.php");
     exit();
 }
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$name, $email, $contact_number, $nic_number, $is_admin, $user_id]);
             
             $_SESSION['success_message'] = "User updated successfully!";
-            header("Location: admin_users.php");
+            header("Location: usersbe.php");
             exit();
         } catch (PDOException $e) {
             $errors[] = "Database error: " . $e->getMessage();
@@ -271,7 +271,7 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
   <div class="container">
     <div class="sidebar">
       <div class="logo">EvenRaw</div>
-      <a href="admin_users.php"><i class="fas fa-users"></i> Users</a>
+              <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
       <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
       <a href="#"><i class="fas fa-images"></i> Portfolio</a>
       <a href="#"><i class="fas fa-box-open"></i> Packages</a>
@@ -324,7 +324,7 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
           </div>
 
           <div class="form-actions">
-            <a href="admin_users.php" class="btn btn-secondary">Cancel</a>
+            <a href="usersbe.php" class="btn btn-secondary">Cancel</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
         </form>
