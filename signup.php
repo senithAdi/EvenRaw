@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$name, $email, $hashed_password]);
         
         // Redirect to login page after successful registration
-        header("Location: Home.html?registration=success");
+        header("Location: Home.php?registration=success");
         exit();
         
     } catch(PDOException $e) {
