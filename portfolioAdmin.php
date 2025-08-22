@@ -281,6 +281,27 @@
         gap: 15px;
       }
     }
+    .report-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 0 0 18px 0;
+}
+
+.btn-report {
+  background: #ffd700;
+  color: #111;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.2s, transform 0.05s;
+}
+
+.btn-report:hover { background: #ffea6c; }
+.btn-report:active { transform: translateY(1px); }
   </style>
 </head>
 <body>
@@ -301,6 +322,12 @@
         <h1>Portfolio Management</h1>
         <div class="user-info">👤 Admin</div>
       </header>
+
+     
+<div class="report-actions">
+  <a href="portfolio_report.php" class="btn-report">View Report</a>
+
+</div>
 
       <div class="portfolio-container">
         <div class="category-filter">
