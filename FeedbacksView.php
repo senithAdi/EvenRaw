@@ -334,11 +334,7 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
     </a>
 </div>
 
-<?php if (isset($_GET['deleted'])): ?>
-    <div class="success-message">
-        Feedback deleted successfully!
-    </div>
-<?php endif; ?>
+
       <?php if (isset($_GET['deleted'])): ?>
         <div class="success-message">
           Feedback deleted successfully!

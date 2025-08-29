@@ -6,6 +6,7 @@
     <title>EvenRaw - Professional Photography Services</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { font-family: 'Arial', sans-serif; background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); min-height: 100vh; }
         .header { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 15px 0; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid rgba(255, 255, 255, 0.2); }
         .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
@@ -97,26 +98,27 @@
 
         <section class="contact-section" id="quote">
             <h2 class="contact-title">Get Your Quote</h2>
-            <form class="contact-form">
-                <div class="form-group">
-                    <input type="text" class="form-input" placeholder="Full Name" required>
-                    <input type="email" class="form-input" placeholder="Email Address" required>
-                </div>
-                <div class="form-group">
-                    <input type="tel" class="form-input" placeholder="Phone Number" required>
-                    <select class="form-input" required>
-                        <option value="">Select Service</option>
-                        <option value="Food Photography">Food Photography</option>
-                        <option value="Wedding Photography">Wedding Photography</option>
-                        <option value="Hotel Photography">Hotel Photography</option>
-                        <option value="Commercial Photography">Commercial Photography</option>
-                        <option value="Model Photography">Model Photography</option>
-                        <option value="Event Photography">Event Photography</option>
-                    </select>
-                </div>
-                <textarea class="form-input form-textarea" placeholder="Tell us about your project requirements..." required></textarea>
-                <button type="submit" class="submit-btn">Get Custom Quote</button>
-            </form>
+            <!-- In Get Quote.html, replace the form section -->
+<form class="contact-form" action="submit_quote.php" method="POST">
+    <div class="form-group">
+        <input type="text" class="form-input" name="full_name" placeholder="Full Name" required>
+        <input type="email" class="form-input" name="email" placeholder="Email Address" required>
+    </div>
+    <div class="form-group">
+        <input type="tel" class="form-input" name="phone" placeholder="Phone Number" required>
+        <select class="form-input" name="service_type" required>
+            <option value="">Select Service</option>
+            <option value="Food Photography">Food Photography</option>
+            <option value="Wedding Photography">Wedding Photography</option>
+            <option value="Hotel Photography">Hotel Photography</option>
+            <option value="Commercial Photography">Commercial Photography</option>
+            <option value="Model Photography">Model Photography</option>
+            <option value="Event Photography">Event Photography</option>
+        </select>
+    </div>
+    <textarea class="form-input form-textarea" name="project_details" placeholder="Tell us about your project requirements..." required></textarea>
+    <button type="submit" class="submit-btn">Get Custom Quote</button>
+</form>
         </section>
     </div>
 

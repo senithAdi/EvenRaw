@@ -22,6 +22,7 @@
       <a href="contact us.html">Contact Us</a>
       <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
       <a href="Login.html" class="btn-yellow">
+        
         <i class="fas fa-user"></i>
       </a>
     </nav>
@@ -103,6 +104,17 @@
 }
   </style>
 </head>
+
+<!-- In the header section of admin_bookings.php -->
+<header>
+  <h1>Bookings</h1>
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <button id="generateReportBtn" style="background: linear-gradient(to right, #fff700, #ffe600); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+      <i class="fas fa-file-pdf"></i> Generate Report
+    </button>
+    <div class="user-info">👤 <?php echo htmlspecialchars($admin_name); ?></div>
+  </div>
+</header>
 <body>
 
   <div class="about-us-container">

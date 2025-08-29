@@ -213,10 +213,10 @@
       <div class="modal-body">
         <div class="mb-4">
           <label class="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
-          <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
-            <option>Detailed User List</option>
-            <option>Summary Report</option>
-            <option>Contact Statistics</option>
+          <select id="reportType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500">
+            <option value="detailed">Detailed User List</option>
+            <option value="summary">Summary Report</option>
+            <option value="statistics">Contact Statistics</option>
           </select>
         </div>
         
@@ -397,6 +397,7 @@
       
       // Generate report
       generateReportNowBtn.addEventListener('click', () => {
+        const reportType = document.getElementById('reportType').value;
         const format = document.querySelector('input[name="format"]:checked').value;
         const includeCharts = document.getElementById('includeCharts').checked;
         
@@ -405,49 +406,83 @@
         
         // Simulate processing time
         setTimeout(() => {
-          generateReport(format, includeCharts);
+          generateReport(reportType, format, includeCharts);
           loadingOverlay.classList.add('hidden');
         }, 1500);
       });
     }
     
-    function generateReport(format, includeCharts) {
+    function generateReport(reportType, format, includeCharts) {
       switch(format) {
         case 'pdf':
-          generatePDFReport(includeCharts);
+          generatePDFReport(reportType, includeCharts);
           break;
         case 'excel':
-          generateExcelReport();
+          generateExcelReport(reportType);
           break;
         case 'csv':
-          generateCSVReport();
+          generateCSVReport(reportType);
           break;
       }
     }
     
-    function generatePDFReport(includeCharts) {
+    function generatePDFReport(reportType, includeCharts) {
       const doc = new jsPDF();
+      
+      // Title based on report type
+      let title = "EvenRaw Users Report - Detailed";
+      if (reportType === "summary") {
+        title = "EvenRaw Users Report - Summary";
+      } else if (reportType === "statistics") {
+        title = "EvenRaw Users Report - Statistics";
+      }
       
       // Title
       doc.setFontSize(20);
       doc.setTextColor(40, 40, 40);
-      doc.text('Contact List Report', 14, 22);
+      doc.text(title, 14, 22);
       
       // Date
       doc.setFontSize(12);
       doc.setTextColor(100, 100, 100);
       doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 30);
       
-      // Table
-      const tableColumn = ["Name", "Email", "Phone", "Message", "Date"];
+      // Add some statistics (simulated since we don't have real user data)
+      const totalContacts = contactsData.length;
+      const withPhone = contactsData.filter(contact => contact.phone && contact.phone !== 'N/A').length;
+      const phonePercentage = totalContacts > 0 ? ((withPhone / totalContacts) * 100).toFixed(1) : 0;
+      
+      // Statistics table
+      const statsData = [
+        ['Total Contacts', totalContacts],
+        ['With Phone', `${withPhone} (${phonePercentage}%)`]
+      ];
+      
+      doc.autoTable({
+        body: statsData,
+        startY: 40,
+        theme: 'grid',
+        styles: { fontSize: 12, cellPadding: 6 },
+        headStyles: { fillColor: [245, 158, 11] } // yellow-500
+      });
+      
+      // Add spacing
+      const statsEndY = doc.lastAutoTable.finalY + 10;
+      doc.setFontSize(16);
+      doc.setTextColor(40, 40, 40);
+      doc.text('Contact Details', 14, statsEndY);
+      
+      // Main data table
+      const tableColumn = ["ID", "Name", "Email", "Phone", "Message", "Date"];
       const tableRows = [];
       
-      contactsData.forEach(contact => {
+      contactsData.forEach((contact, index) => {
         const contactData = [
+          index + 1,
           `${contact.first_name} ${contact.last_name}`,
           contact.email,
           contact.phone || 'N/A',
-          contact.message.length > 50 ? contact.message.substring(0, 50) + '...' : contact.message,
+          contact.message.length > 30 ? contact.message.substring(0, 30) + '...' : contact.message,
           new Date(contact.submission_date).toLocaleDateString()
         ];
         tableRows.push(contactData);
@@ -456,49 +491,34 @@
       doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        startY: 40,
+        startY: statsEndY + 10,
         theme: 'grid',
         styles: { fontSize: 9, cellPadding: 3 },
         headStyles: { fillColor: [245, 158, 11] } // yellow-500
       });
       
-      // Add a simple chart if requested (basic implementation)
-      if (includeCharts && contactsData.length > 0) {
-        const finalY = doc.lastAutoTable.finalY + 10;
-        
-        if (finalY < 250) { // Ensure we have space on the page
-          doc.setFontSize(16);
-          doc.setTextColor(40, 40, 40);
-          doc.text('Contact Summary', 14, finalY);
-          
-          // Simple bar chart representation (simulated with lines)
-          const chartStartY = finalY + 10;
-          const chartHeight = 40;
-          const chartWidth = 150;
-          const chartStartX = 20;
-          
-          // Draw axes
-          doc.setDrawColor(100, 100, 100);
-          doc.line(chartStartX, chartStartY, chartStartX, chartStartY + chartHeight); // Y-axis
-          doc.line(chartStartX, chartStartY + chartHeight, chartStartX + chartWidth, chartStartY + chartHeight); // X-axis
-          
-          // Add note about charts in PDF
-          doc.setFontSize(10);
-          doc.setTextColor(150, 150, 150);
-          doc.text('* Basic chart representation. For detailed charts, consider Excel format.', 14, chartStartY + chartHeight + 15);
-        }
-      }
+      // Footer
+      const finalY = doc.lastAutoTable.finalY + 15;
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      
+      // Add "Report generated by: System Administrator"
+      doc.text('Report generated by: System Administrator', 14, finalY);
+      
+      // Add "EvenRaw User Management System" on the next line
+      doc.text('EvenRaw User Management System', 14, finalY + 5);
       
       // Save the PDF
-      doc.save('contact-list-report.pdf');
+      doc.save('evenraw-contacts-report.pdf');
       
       // Show success message
       showSuccessMessage('PDF report generated successfully!');
     }
     
-    function generateExcelReport() {
+    function generateExcelReport(reportType) {
       // Prepare data for Excel
-      const data = contactsData.map(contact => ({
+      const data = contactsData.map((contact, index) => ({
+        'ID': index + 1,
         'First Name': contact.first_name,
         'Last Name': contact.last_name,
         'Email': contact.email,
@@ -512,21 +532,34 @@
       
       // Create workbook
       const workbook = XLSX.utils.book_new();
+      
+      // Add statistics sheet if needed
+      if (reportType === 'statistics' || reportType === 'summary') {
+        const statsData = [
+          ['Metric', 'Value'],
+          ['Total Contacts', contactsData.length],
+          ['With Phone', contactsData.filter(contact => contact.phone && contact.phone !== 'N/A').length]
+        ];
+        const statsSheet = XLSX.utils.aoa_to_sheet(statsData);
+        XLSX.utils.book_append_sheet(workbook, statsSheet, 'Statistics');
+      }
+      
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Contacts');
       
       // Generate Excel file and download
-      XLSX.writeFile(workbook, 'contact-list-report.xlsx');
+      XLSX.writeFile(workbook, 'evenraw-contacts-report.xlsx');
       
       // Show success message
       showSuccessMessage('Excel report generated successfully!');
     }
     
-    function generateCSVReport() {
+    function generateCSVReport(reportType) {
       // Create CSV content
-      let csvContent = 'First Name,Last Name,Email,Phone,Message,Date\n';
+      let csvContent = 'ID,First Name,Last Name,Email,Phone,Message,Date\n';
       
-      contactsData.forEach(contact => {
+      contactsData.forEach((contact, index) => {
         const row = [
+          index + 1,
           `"${contact.first_name}"`,
           `"${contact.last_name}"`,
           `"${contact.email}"`,
@@ -542,7 +575,7 @@
       const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
       const link = document.createElement('a');
       link.setAttribute('href', encodedUri);
-      link.setAttribute('download', 'contact-list-report.csv');
+      link.setAttribute('download', 'evenraw-contacts-report.csv');
       document.body.appendChild(link);
       
       // Trigger download
@@ -567,7 +600,5 @@
       }, 5000);
     }
   </script>
-  
-  
 </body>
 </html>

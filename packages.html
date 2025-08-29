@@ -17,6 +17,20 @@ body {
 }
 .container { display: flex; flex: 1; }
 
+.delete-btn {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 4px;
+}
+.delete-btn:hover {
+    background: #cc0000;
+}
+
 /* Sidebar (from your code) */
 .sidebar { width: 220px; background: linear-gradient(180deg, #fff200, #ffe600); padding: 30px 10px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
 .logo { font-size: 1.8em; font-weight: 700; letter-spacing: 2px; }
@@ -81,6 +95,34 @@ footer ul li a:hover { color: #FFD700; }
 </head>
 <body>
   <script>
+
+function deletePackage(packageName) {
+    if (confirm(`Are you sure you want to delete "${packageName}"? This action cannot be undone.`)) {
+        fetch('delete_package.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                packageName: packageName
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Package deleted successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the package');
+        });
+    }
+}
+
     function toggleCategory(element) {
       const list = element.nextElementSibling;
       list.style.display = (list.style.display === "block") ? "none" : "block";
@@ -237,6 +279,7 @@ footer ul li a:hover { color: #FFD700; }
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Food Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Food Photography')">Delete PDF & Hide</button>
@@ -251,20 +294,25 @@ footer ul li a:hover { color: #FFD700; }
           </div>
           <div class="package-card">
             <p>Gold Package</p>
+
             <div>
-              <button class="edit-btn" onclick="openModal('Gold Package', 'Food Photography')">Edit Package</button>
-              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Food Photography')">Delete PDF & Hide</button>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Food Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Food Photography')">Delete PDF & Hide</button>
             </div>
           </div>
+
+            
+          
         </div>
       </div>
 
       <!-- More categories (Wedding, Model, Commercial...) -->
-      <div class="package-category">
+           <div class="package-category">
         <h3 onclick="toggleCategory(this)">Wedding Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Wedding Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Wedding Photography')">Delete PDF & Hide</button>
@@ -279,19 +327,21 @@ footer ul li a:hover { color: #FFD700; }
           </div>
           <div class="package-card">
             <p>Gold Package</p>
+
             <div>
-              <button class="edit-btn" onclick="openModal('Gold Package', 'Wedding Photography')">Edit Package</button>
-              <button class="delete-btn" onclick="deletePackage('Gold Package', 'Wedding Photography')">Delete PDF & Hide</button>
+              <button class="edit-btn" onclick="openModal('Bronze Package', 'Wedding Photography')">Edit Package</button>
+              <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Wedding Photography')">Delete PDF & Hide</button>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="package-category">
+            <div class="package-category">
         <h3 onclick="toggleCategory(this)">Hotel Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Hotel Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Hotel Photography')">Delete PDF & Hide</button>
@@ -311,14 +361,16 @@ footer ul li a:hover { color: #FFD700; }
               <button class="delete-btn" onclick="deletePackage('Gold Package', 'Hotel Photography')">Delete PDF & Hide</button>
             </div>
           </div>
+
         </div>
       </div>
 
-      <div class="package-category">
+           <div class="package-category">
         <h3 onclick="toggleCategory(this)">Commercial Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Commercial Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Commercial Photography')">Delete PDF & Hide</button>
@@ -337,15 +389,17 @@ footer ul li a:hover { color: #FFD700; }
               <button class="edit-btn" onclick="openModal('Gold Package', 'Commercial Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Gold Package', 'Commercial Photography')">Delete PDF & Hide</button>
             </div>
+
           </div>
         </div>
       </div>
 
-      <div class="package-category">
+           <div class="package-category">
         <h3 onclick="toggleCategory(this)">Model Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Model Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Model Photography')">Delete PDF & Hide</button>
@@ -368,11 +422,12 @@ footer ul li a:hover { color: #FFD700; }
         </div>
       </div>
 
-      <div class="package-category">
-        <h3 onclick="toggleCategory(this)">Event Photography <i class="fa fa-chevron-down"></i></h3>
+           <div class="package-category">
+        <h3 onclick="toggleCategory(this)">Events Photography <i class="fa fa-chevron-down"></i></h3>
         <div class="package-list">
           <div class="package-card">
             <p>Bronze Package</p>
+
             <div>
               <button class="edit-btn" onclick="openModal('Bronze Package', 'Event Photography')">Edit Package</button>
               <button class="delete-btn" onclick="deletePackage('Bronze Package', 'Event Photography')">Delete PDF & Hide</button>

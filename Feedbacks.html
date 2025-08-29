@@ -471,6 +471,7 @@
         
         // Show loading state
         const submitBtn = this.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
         
@@ -483,8 +484,10 @@
             body: formData
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new TypeError("Server didn't return JSON");
             }
             return response.json();
         })
@@ -500,19 +503,20 @@
                 setTimeout(() => {
                     document.getElementById('feedbackForm').reset();
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Feedback';
+                    submitBtn.textContent = originalText;
+                    successMsg.style.display = 'none';
                 }, 3000);
             } else {
                 alert('Error: ' + data.message);
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Feedback';
+                submitBtn.textContent = originalText;
             }
         })
         .catch(error => {
             console.error('Error:', error);
             alert('An error occurred while submitting your feedback. Please try again.');
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Feedback';
+            submitBtn.textContent = originalText;
         });
     });
 </script>

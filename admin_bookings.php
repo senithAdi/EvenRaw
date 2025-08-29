@@ -363,6 +363,14 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
       <?php endif; ?>
       
       <div class="bookings-container">
+        <div style="text-align:right; margin-bottom: 10px;">
+          <a class="btn btn-view" href="view_booking_report.php" target="_blank">
+            <i class="fas fa-eye"></i> View Report
+          </a>
+          <a class="btn btn-view" href="generate_booking_report_admin.php">
+            <i class="fas fa-file-pdf"></i> Download PDF
+          </a>
+        </div>
         <table>
           <thead>
             <tr>
@@ -589,4 +597,4 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
     }
   </script>
 </body>
-</html> 
+</html>
