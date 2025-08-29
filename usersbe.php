@@ -433,7 +433,7 @@ $admin_name = $_SESSION['name'] ?? 'Admin';
   <div class="container">
     <div class="sidebar">
       <div class="logo">EvenRaw</div>
-      <a href="admin_users.php"><i class="fas fa-users"></i> Users</a>
+      <a href="usersbe.php" class="active"><i class="fas fa-users"></i> Users</a>
       <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
       <a href="#"><i class="fas fa-images"></i> Portfolio</a>
       <a href="#"><i class="fas fa-box-open"></i> Packages</a>
