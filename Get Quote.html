@@ -138,12 +138,8 @@
             });
         });
 
-        // Form submission
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for your interesting us.We will contact you as soon as with a your custom quote,Thank you!');
-            this.reset();
-        });
+        // Form submission - removed preventDefault to allow actual form submission
+        // The form will now submit to submit_quote.php and show the success message from PHP
 
         // Load active packages with PDFs and render
         document.addEventListener('DOMContentLoaded', function() {
