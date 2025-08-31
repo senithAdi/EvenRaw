@@ -1,13 +1,12 @@
 <?php
-// Start session and check admin authentication
-// session_start();
-// if (!isset($_SESSION['admin_logged_in'])) {
-//     header('Location: admin_login.php');
-//     exit();
-// }
-
-// Database connection
+session_start();
 require_once 'db_connect.php';
+
+// Check if admin is logged in
+if (!isset($_SESSION['user_id']) || !$_SESSION['is_admin']) {
+    header("Location: login.php");
+    exit();
+}
 
 // Handle delete feedback
 if (isset($_GET['delete_id'])) {
@@ -57,7 +56,6 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
       display: flex;
       flex-direction: column;
     }
-
     .container {
       display: flex;
       flex: 1;
@@ -102,6 +100,10 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
 
     .sidebar a:hover {
       background: rgba(0, 0, 0, 0.05);
+    }
+
+     .sidebar a.active {
+      background: rgba(0, 0, 0, 0.1);
     }
 
     .main-content {
@@ -314,13 +316,13 @@ $admin_name = $_SESSION['admin_name'] ?? 'Admin';
   <div class="container">
     <div class="sidebar">
       <div class="logo">EvenRaw</div>
-              <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
+      <a href="adminDashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
       <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
-      <a href="#"><i class="fas fa-images"></i> Portfolio</a>
-      <a href="#"><i class="fas fa-box-open"></i> Packages</a>
-      <a href="#"><i class="fas fa-chart-line"></i> Analysis</a>
-      <a href="#"><i class="fas fa-address-book"></i> Contact List</a>
-      <a href="FeedbacksView.php"><i class="fas fa-comment-alt"></i> Feedbacks</a>
+      <a href="portfolioAdmin.php"><i class="fas fa-images"></i> Portfolio</a>
+      <a href="packages.html"><i class="fas fa-box-open"></i> Packages</a>
+      <a href="contactlist.html"><i class="fas fa-address-book"></i> Contact List</a>
+      <a href="FeedbacksView.php" class="active"><i class="fas fa-comment-alt"></i> Feedbacks</a>
     </div>
 
     <div class="main-content">

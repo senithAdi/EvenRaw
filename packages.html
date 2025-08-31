@@ -3,19 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Packages - EvenRaw</title>
+  <title>Admin Packages</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
   <style>
-    /* Reuse Sidebar & Footer styles from your code */
+   
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
-  margin: 0;
-  padding: 0;
+background: linear-gradient(to bottom right, #fffbe6, #f6f6f6);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
 }
-.container { display: flex; flex: 1; }
+ .container {
+      display: flex;
+      flex: 1;
+    }
 
 .delete-btn {
     background: #ff4444;
@@ -32,10 +43,48 @@ body {
 }
 
 /* Sidebar (from your code) */
-.sidebar { width: 220px; background: linear-gradient(180deg, #fff200, #ffe600); padding: 30px 10px; position: fixed; top: 0; bottom: 0; left: 0; display: flex; flex-direction: column; gap: 25px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 2; }
-.logo { font-size: 1.8em; font-weight: 700; letter-spacing: 2px; }
-.sidebar a { text-decoration: none; color: #111; font-weight: 500; padding: 12px 10px; border-radius: 8px; transition: background 0.3s; }
-.sidebar a:hover, .sidebar a.active { background: rgba(0, 0, 0, 0.1); }
+.sidebar {
+      width: 220px;
+      background: linear-gradient(180deg, #fff700, #ffe600);
+      padding: 30px 20px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #111;
+      font-weight: 500;
+      padding: 12px 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+     .sidebar a.active {
+      background: rgba(0, 0, 0, 0.1);
+    }
 
 /* Main Content */
 .main-content { margin-left: 220px; padding: 40px; flex: 1; animation: fadeIn 0.5s ease; }
@@ -251,16 +300,16 @@ function deletePackage(packageName) {
 
 <div class="container">
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">EvenRaw</div>
-    <a href="#">Users</a>
-    <a href="#">Bookings</a>
-    <a href="#">Portfolio</a>
-    <a class="active" href="#">Packages</a>
-    <a href="#">Analysis</a>
-    <a href="#">Contact List</a>
-    <a href="#">Feedbacks</a>
-  </div>
+    <div class="sidebar">
+      <div class="logo">EvenRaw</div>
+      <a href="adminDashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
+      <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+      <a href="portfolioAdmin.php"><i class="fas fa-images"></i> Portfolio</a>
+      <a href="#" class="active"><i class="fas fa-box-open"></i> Packages</a>
+      <a href="contactlist.html"><i class="fas fa-address-book"></i> Contact List</a>
+      <a href="FeedbacksView.php"><i class="fas fa-comment-alt"></i> Feedbacks</a>
+    </div>
 
   <!-- Main Content -->
   <div class="main-content">
@@ -485,7 +534,7 @@ function deletePackage(packageName) {
       <hr>
       <ul>
         <li><a href="Home.php">Home</a></li>
-        <li><a href="Portfolio.html">Portfolio</a></li>
+        <li><a href="Portfolio.php">Portfolio</a></li>
         <li><a href="About us.html">About Us</a></li>
         <li><a href="contact us.html">Contact Us</a></li>
         <li><a href="Get Quote.html">Quote</a></li>
@@ -505,10 +554,10 @@ function deletePackage(packageName) {
       <h4>Events</h4>
       <hr>
       <ul>
-        <li><a href="Portfolio.html">Weddings</a></li>
-        <li><a href="Portfolio.html">Birthdays</a></li>
-        <li><a href="Portfolio.html">Graduations</a></li>
-        <li><a href="Portfolio.html">Corporate Events</a></li>
+        <li><a href="Portfolio.php">Weddings</a></li>
+        <li><a href="Portfolio.php">Birthdays</a></li>
+        <li><a href="Portfolio.php">Graduations</a></li>
+        <li><a href="Portfolio.php">Corporate Events</a></li>
       </ul>
     </div>
     <div>

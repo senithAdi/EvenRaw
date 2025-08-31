@@ -18,9 +18,9 @@
     <nav>
       <a href="Home.php">Home</a>
       <a href="About us.html">About Us</a>
-      <a href="Portfolio.html">Portfolio</a>
+      <a href="Portfolio.php">Portfolio</a>
       <a href="contact us.html">Contact Us</a>
-      <a href="#" class="btn-yellow">Get a Quote</a>
+      <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
 <a href="<?php echo isset($_SESSION['logged_in']) ? 'User profile.php' : 'LoginUI.php'; ?>" class="btn-yellow">
     <i class="fas fa-user"></i>
 </a>
@@ -29,7 +29,7 @@
 
   <div class="container" id="container">
         <div class="form-container sign-up">
-            <form action="signup.php" method="POST">
+            <form action="signup.php" onsubmit= "return validatePassword(),validateEmail()" method="POST">
                 <h1>Create Account</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class='bx bxl-facebook'></i></a>
@@ -108,8 +108,8 @@
             function validatePassword() {
             let pass = document.getElementById("txtPassword").value;
 
-            if (pass.length < 2) {
-                alert("Please enter correct password.");
+            if (pass.length < 7) {
+                alert("Password should have atleat 7 characters.");
                 return false;
             }
             return true;

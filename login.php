@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Redirect based on admin status
                 if ($userData['is_admin'] == 1) {
-                    header("Location: BookingsBE.php");
+                    header("Location: adminDashboard.php");
                 } else {
                     header("Location: User profile.php");
                 }

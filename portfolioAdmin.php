@@ -59,6 +59,10 @@
       background: rgba(0, 0, 0, 0.05);
     }
 
+    .sidebar a.active {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
     .main-content {
       margin-left: 220px;
       padding: 40px;
@@ -308,13 +312,13 @@
   <div class="container">
     <div class="sidebar">
       <div class="logo">EvenRaw</div>
-      <a href="usersbe.html">Users</a>
-      <a href="BookingsBE.php">Bookings</a>
-      <a href="portfolioAdmin.html" style="background: rgba(0, 0, 0, 0.1);">Portfolio</a>
-      <a href="#">Packages</a>
-      <a href="#">Analysis</a>
-      <a href="contactlist.html">Contact List</a>
-      <a href="#">Feedbacks</a>
+      <a href="adminDashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
+      <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+      <a href="portfolioAdmin.php" class="active"><i class="fas fa-images"></i> Portfolio</a>
+      <a href="packages.html"><i class="fas fa-box-open"></i> Packages</a>
+      <a href="contactlist.html"><i class="fas fa-address-book"></i> Contact List</a>
+      <a href="FeedbacksView.php"><i class="fas fa-comment-alt"></i> Feedbacks</a>
     </div>
 
     <div class="main-content">
@@ -356,49 +360,6 @@
       </div>
     </div>
   </div>
-
-  <footer>
-    <div>
-      <h4>Menu</h4>
-      <hr>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Portfolio</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Quote</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Get Help</h4>
-      <hr>
-      <ul>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Reservations</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Events</h4>
-      <hr>
-      <ul>
-        <li><a href="#">Weddings</a></li>
-        <li><a href="#">Birthdays</a></li>
-        <li><a href="#">Graduations</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Follow Us</h4>
-      <hr>
-      <div class="footer-col">
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-whatsapp"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-      </div>
-    </div>
-  </footer>
 
   <script>
     // Select All functionality

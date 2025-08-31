@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evenraw Admin - Contact List</title>
+  <title>Admin Contact List</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <!-- Libraries for export functionality -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
+    
     .card {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -133,24 +135,67 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: linear-gradient(180deg, #fff700, #ffe600);
+      padding: 30px 20px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+    .logo {
+      font-size: 1.8em;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+      margin-bottom: 20px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #111;
+      font-weight: 500;
+      padding: 12px 10px;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+ .sidebar a.active {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
   </style>
 </head>
 <body class="bg-gray-100 flex">
   <!-- Sidebar -->
-  <aside class="w-64 bg-white shadow-lg h-screen fixed">
-    <div class="p-4 text-2xl font-bold text-yellow-500">evenraw</div>
-    <nav class="mt-6">
-      <ul class="space-y-3 text-gray-700">
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Users</li>
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Bookings</li>
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Portfolio</li>
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Packages</li>
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Analysis</li>
-        <li class="px-6 py-2 bg-yellow-100 font-semibold cursor-pointer">Contact List</li>
-        <li class="px-6 py-2 hover:bg-gray-100 cursor-pointer">Feedbacks</li>
-      </ul>
-    </nav>
-  </aside>
+<div class="sidebar">
+      <div class="logo">EvenRaw</div>
+      <a href="adminDashboard.php"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="usersbe.php"><i class="fas fa-users"></i> Users</a>
+      <a href="admin_bookings.php"><i class="fas fa-calendar-check"></i> Bookings</a>
+      <a href="portfolioAdmin.php"><i class="fas fa-images"></i> Portfolio</a>
+      <a href="packages.html"><i class="fas fa-box-open"></i> Packages</a>
+      <a href="#" class="active"><i class="fas fa-address-book"></i> Contact List</a>
+      <a href="FeedbacksView.php"><i class="fas fa-comment-alt"></i> Feedbacks</a>
+    </div>
 
   <!-- Main Content -->
   <main class="ml-64 w-full p-6">

@@ -121,7 +121,7 @@ session_start();
     <nav>
       <a href="#">Home</a>
       <a href="About us.html">About Us</a>
-      <a href="Portfolio.html">Portfolio</a>
+      <a href="Portfolio.php">Portfolio</a>
       <a href="contact us.html">Contact Us</a>
       <a href="Get Quote.html" class="btn-yellow">Get a Quote</a>
 <a href="<?php echo isset($_SESSION['logged_in']) ? 'User profile.php' : 'Login.html'; ?>" class="btn-yellow">
@@ -261,7 +261,7 @@ session_start();
       <hr>
       <ul>
         <li><a href="Home.php">Home</a></li>
-        <li><a href="Portfolio.html">Portfolio</a></li>
+        <li><a href="Portfolio.php">Portfolio</a></li>
         <li><a href="About us.html">About Us</a></li>
         <li><a href="contact us.html">Contact Us</a></li>
         <li><a href="Get Quote.html">Quote</a></li>
@@ -281,10 +281,10 @@ session_start();
       <h4>Events</h4>
       <hr>
       <ul>
-        <li><a href="Portfolio.html">Weddings</a></li>
-        <li><a href="Portfolio.html">Birthdays</a></li>
-        <li><a href="Portfolio.html">Graduations</a></li>
-        <li><a href="Portfolio.html">Corporate Events</a></li>
+        <li><a href="Portfolio.php">Weddings</a></li>
+        <li><a href="Portfolio.php">Birthdays</a></li>
+        <li><a href="Portfolio.php">Graduations</a></li>
+        <li><a href="Portfolio.php">Corporate Events</a></li>
       </ul>
     </div>
     <div>
